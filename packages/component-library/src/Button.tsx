@@ -90,9 +90,9 @@ const _getBorder = (
 const _getPadding = (variant: ButtonVariant): string => {
   switch (variant) {
     case 'bare':
-      return '5px';
+      return '7px';
     default:
-      return '5px 10px';
+      return '7px 12px';
   }
 };
 
@@ -148,7 +148,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           margin: 0,
           overflow: 'hidden',
           display: 'flex',
-          borderRadius: 4,
+          borderRadius: 8,
           backgroundColor: backgroundColor[variantWithDisabled],
           border: _getBorder(variant, variantWithDisabled),
           color: textColor[variantWithDisabled],
@@ -157,6 +157,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ...styles.smallText,
           '&[data-hovered]': _getHoveredStyles(variant),
           '&[data-pressed]': _getActiveStyles(variant, bounce),
+          '&[data-focus-visible]': {
+            outline: `2px solid ${theme.buttonPrimaryBackground}`,
+            outlineOffset: 2,
+          },
         }),
       [bounce, variant, variantWithDisabled],
     );

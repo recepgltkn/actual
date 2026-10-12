@@ -24,6 +24,7 @@ import { useDrag } from '@use-gesture/react';
 import { useIsTestEnv } from '#hooks/useIsTestEnv';
 import { useScrollListener } from '#hooks/useScrollListener';
 import { useSyncServerStatus } from '#hooks/useSyncServerStatus';
+import { ContourTrace } from '#components/ContourTrace';
 
 const COLUMN_COUNT = 3;
 const PILL_HEIGHT = 15;
@@ -220,7 +221,7 @@ export function MobileNavTabs() {
         touchAction: 'pan-x',
         backgroundColor: theme.mobileNavBackground,
         borderTop: `1px solid ${theme.menuBorder}`,
-        ...styles.shadow,
+        boxShadow: 'none',
         height: TOTAL_HEIGHT + PILL_HEIGHT,
         width: '100%',
         position: 'fixed',
@@ -284,13 +285,48 @@ function NavTab({ Icon: TabIcon, name, path, style, onClick }: NavTabProps) {
         textDecoration: 'none',
         textAlign: 'center',
         textWrap: 'balance',
+        fontSize: 12,
+        fontWeight: isActive ? 600 : 500,
+        lineHeight: 1.2,
         userSelect: 'none',
         ...style,
       })}
       onClick={onClick}
     >
-      <TabIcon width={22} height={22} style={{ minHeight: '22px' }} />
-      {name}
+      {({ isActive }) => (
+        <>
+          <span
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+              width: 36,
+              height: 30,
+              marginBottom: 4,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 12,
+              backgroundColor: isActive
+                ? theme.mobileNavItemSelectedBackground
+                : 'transparent',
+            }}
+          >
+            {isActive && (
+              <ContourTrace
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0.28,
+                }}
+              />
+            )}
+            <TabIcon width={20} height={20} style={{ minHeight: '20px' }} />
+          </span>
+          {name}
+        </>
+      )}
     </NavLink>
   );
 }

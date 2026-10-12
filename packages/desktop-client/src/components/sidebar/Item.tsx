@@ -13,6 +13,8 @@ import { styles } from '@actual-app/components/styles';
 import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 
+import { ContourTrace } from '#components/ContourTrace';
+
 import { ItemContent } from './ItemContent';
 
 type ItemProps = {
@@ -49,12 +51,27 @@ export function Item({
       style={{
         flexDirection: 'row',
         alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
         height: 20,
       }}
     >
       <Icon width={15} height={15} />
       <Block style={{ marginLeft: 8 }}>{title}</Block>
       <View style={{ flex: 1 }} />
+      <ContourTrace
+        className="sidebar-contour-trace"
+        style={{
+          position: 'absolute',
+          right: -4,
+          top: -8,
+          width: 78,
+          height: 36,
+          opacity: 0,
+          transition: 'opacity 180ms ease-out',
+          pointerEvents: 'none',
+        }}
+      />
     </View>
   );
 
@@ -63,20 +80,22 @@ export function Item({
       <ItemContent
         style={{
           ...styles.mediumText,
-          paddingTop: 9,
-          paddingBottom: 9,
-          paddingLeft: 19 + indent,
-          paddingRight: 10,
+          margin: '2px 8px',
+          borderRadius: 9,
+          padding: '9px 12px',
           textDecoration: 'none',
           color: theme.sidebarItemText,
+          '&[aria-current="page"] .sidebar-contour-trace': {
+            opacity: 0.3,
+          },
           ...(forceHover ? hoverStyle : {}),
           ':hover': hoverStyle,
         }}
         forceActive={forceActive}
         activeStyle={{
-          borderLeft: '4px solid ' + theme.sidebarItemTextSelected,
-          paddingLeft: 19 + indent - 4,
+          backgroundColor: theme.sidebarItemBackgroundSelected,
           color: theme.sidebarItemTextSelected,
+          fontWeight: 600,
         }}
         to={to}
         onClick={onClick}

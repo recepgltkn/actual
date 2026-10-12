@@ -59,16 +59,19 @@ export function SecondaryItem({
       <ItemContent
         style={{
           ...accountNameStyle,
+          margin: '2px 8px',
+          borderRadius: 9,
           color: theme.sidebarItemText,
           paddingLeft: 14 + indent,
           fontWeight: bold ? fontWeight : null,
-          ':hover': { backgroundColor: theme.sidebarItemBackgroundHover },
+          ':hover': {
+            backgroundColor: theme.sidebarItemBackgroundHover,
+          },
         }}
         to={to}
         onClick={onClick}
         activeStyle={{
-          borderLeft: '4px solid ' + theme.sidebarItemTextSelected,
-          paddingLeft: 14 - 4 + indent,
+          backgroundColor: theme.sidebarItemBackgroundSelected,
           color: theme.sidebarItemTextSelected,
           fontWeight: bold ? fontWeight : null,
         }}

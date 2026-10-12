@@ -18,8 +18,8 @@ export const baseInputStyle = {
   backgroundColor: theme.tableBackground,
   color: theme.formInputText,
   margin: 0,
-  padding: 5,
-  borderRadius: 4,
+  padding: '7px 9px',
+  borderRadius: 8,
   border: '1px solid ' + theme.formInputBorder,
 };
 
@@ -32,6 +32,10 @@ export const defaultInputClassName = css({
   '&[data-focused]': {
     border: '1px solid ' + theme.formInputBorderSelected,
     boxShadow: '0 1px 1px ' + theme.formInputShadowSelected,
+  },
+  '&[data-focus-visible]': {
+    outline: `2px solid ${theme.formInputBorderSelected}`,
+    outlineOffset: 1,
   },
   '&[data-disabled]': {
     color: theme.formInputTextPlaceholder,
@@ -92,11 +96,11 @@ export function Input({
 }
 
 const defaultBigInputClassName = css({
-  padding: 10,
+  minHeight: 44,
+  padding: '10px 12px',
   fontSize: 15,
-  border: 'none',
-  ...styles.shadow,
-  '&[data-focused]': { border: 'none', ...styles.shadow },
+  border: '1px solid ' + theme.formInputBorder,
+  '&[data-focused]': { border: '1px solid ' + theme.formInputBorderSelected },
 });
 
 export function BigInput({ className, ...props }: InputProps) {

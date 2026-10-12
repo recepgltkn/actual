@@ -1,43 +1,43 @@
 :root {
   --color-pageBackground: var(--palette-gray900);
   --color-pageBackgroundModalActive: var(--palette-gray800);
-  --color-pageBackgroundTopLeft: var(--palette-navy800);
-  --color-pageBackgroundBottomRight: var(--palette-gray700);
-  --color-pageBackgroundLineTop: var(--palette-purple400);
-  --color-pageBackgroundLineMid: var(--palette-navy900);
-  --color-pageBackgroundLineBottom: var(--palette-navy150);
-  --color-pageText: var(--palette-navy150);
-  --color-pageTextLight: var(--palette-navy300);
-  --color-pageTextSubdued: var(--palette-navy500);
-  --color-pageTextDark: var(--palette-navy100);
-  --color-pageTextPositive: var(--palette-purple200);
-  --color-pageTextLink: var(--palette-purple400);
-  --color-pageTextLinkLight: var(--palette-purple200);
+  --color-pageBackgroundTopLeft: var(--palette-gray900);
+  --color-pageBackgroundBottomRight: var(--palette-gray900);
+  --color-pageBackgroundLineTop: var(--palette-gray700);
+  --color-pageBackgroundLineMid: var(--palette-gray900);
+  --color-pageBackgroundLineBottom: var(--palette-gray800);
+  --color-pageText: var(--palette-gray100);
+  --color-pageTextLight: var(--palette-gray200);
+  --color-pageTextSubdued: var(--palette-gray300);
+  --color-pageTextDark: var(--palette-gray50);
+  --color-pageTextPositive: var(--palette-forest300);
+  --color-pageTextLink: var(--palette-forest300);
+  --color-pageTextLinkLight: var(--palette-forest200);
 
   --color-cardBackground: var(--palette-gray800);
-  --color-cardBorder: var(--palette-purple400);
-  --color-cardShadow: var(--palette-navy700);
+  --color-cardBorder: var(--palette-gray700);
+  --color-cardShadow: var(--palette-gray900);
 
-  --color-tableBackground: var(--palette-navy800);
+  --color-tableBackground: var(--palette-gray800);
   --color-tableRowBackgroundAlternate: var(--color-tableBackground);
-  --color-tableRowBackgroundHover: var(--palette-navy700);
+  --color-tableRowBackgroundHover: var(--palette-gray700);
   --color-tableText: var(--palette-navy150);
   --color-tableTextItemAdded: var(--color-tableText);
-  --color-tableTextLight: var(--color-tableText);
-  --color-tableTextSubdued: var(--palette-navy500);
-  --color-tableTextSelected: var(--palette-navy150);
+  --color-tableTextLight: var(--palette-gray200);
+  --color-tableTextSubdued: var(--palette-gray300);
+  --color-tableTextSelected: var(--palette-gray50);
   --color-tableTextHover: var(--palette-navy400);
   --color-tableTextInactive: var(--palette-navy500);
-  --color-tableHeaderText: var(--palette-navy300);
-  --color-tableHeaderBackground: var(--palette-navy700);
-  --color-tableBorder: var(--palette-navy600);
-  --color-tableBorderSelected: var(--palette-purple400);
-  --color-tableBorderHover: var(--palette-purple300);
+  --color-tableHeaderText: var(--palette-gray200);
+  --color-tableHeaderBackground: var(--palette-gray800);
+  --color-tableBorder: var(--palette-gray700);
+  --color-tableBorderSelected: var(--palette-forest300);
+  --color-tableBorderHover: var(--palette-forest300);
   --color-tableBorderSeparator: var(--palette-navy400);
-  --color-tableRowBackgroundHighlight: var(--palette-purple800);
-  --color-tableRowBackgroundHighlightText: var(--palette-navy150);
-  --color-tableRowHeaderBackground: var(--palette-navy700);
-  --color-tableRowHeaderText: var(--palette-navy150);
+  --color-tableRowBackgroundHighlight: var(--palette-forest800);
+  --color-tableRowBackgroundHighlightText: var(--palette-gray50);
+  --color-tableRowHeaderBackground: var(--palette-gray700);
+  --color-tableRowHeaderText: var(--palette-gray100);
 
   --color-numberPositive: var(--palette-green300);
   --color-numberNegative: var(--palette-red200);
@@ -52,24 +52,24 @@
   --color-toBudgetZero: var(--color-numberPositive);
   --color-toBudgetNegative: var(--color-budgetNumberNegative);
 
-  --color-sidebarBackground: var(--palette-navy900);
+  --color-sidebarBackground: var(--palette-forest900);
   --color-sidebarItemBackgroundPending: var(--palette-orange200);
   --color-sidebarItemBackgroundPositive: var(--palette-green500);
   --color-sidebarItemBackgroundFailed: var(--palette-red300);
-  --color-sidebarItemAccentSelected: var(--palette-purple200);
-  --color-sidebarItemBackgroundHover: var(--palette-navy700);
+  --color-sidebarItemAccentSelected: var(--palette-forest300);
+  --color-sidebarItemBackgroundHover: var(--palette-forest800);
   --color-sidebarItemBackgroundSelected: color-mix(
     in srgb,
     var(--color-sidebarItemAccentSelected) 22%,
     transparent
   );
-  --color-sidebarItemText: var(--palette-navy150);
+  --color-sidebarItemText: var(--palette-gray100);
   --color-sidebarItemTextUpdated: var(--color-sidebarItemText);
-  --color-sidebarItemTextSelected: var(--palette-purple200);
-  --color-sidebarBudgetName: var(--palette-navy300);
-  --color-sidebarHeaderText: var(--palette-white);
-  --color-sidebarTextSubdued: var(--palette-navy300);
-  --color-sidebarTextMuted: var(--palette-navy500);
+  --color-sidebarItemTextSelected: var(--palette-earth50);
+  --color-sidebarBudgetName: var(--palette-gray200);
+  --color-sidebarHeaderText: var(--palette-gray50);
+  --color-sidebarTextSubdued: var(--palette-gray200);
+  --color-sidebarTextMuted: var(--palette-gray300);
   --color-sidebarTextPositive: var(--color-sidebarItemBackgroundPositive);
   --color-sidebarTextFailed: var(--color-sidebarItemBackgroundFailed);
   --color-sidebarBackgroundFailedSubtle: color-mix(
@@ -79,44 +79,45 @@
   );
   --color-sidebarBorder: var(--color-sidebarItemBackgroundHover);
   --color-sidebarControlBackground: var(--color-sidebarItemBackgroundHover);
-  --color-sidebarBrand: var(--color-sidebarItemAccentSelected);
+  --color-sidebarBrand: var(--palette-forest300);
 
-  --color-menuBackground: var(--palette-navy800);
-  --color-menuItemBackground: var(--palette-navy800);
-  --color-menuItemBackgroundHover: var(--palette-navy500);
-  --color-menuItemText: var(--palette-navy100);
+  --color-menuBackground: var(--palette-gray800);
+  --color-menuItemBackground: var(--palette-gray800);
+  --color-menuItemBackgroundHover: var(--palette-gray700);
+  --color-menuItemText: var(--palette-gray50);
   --color-menuItemTextHover: var(--palette-navy50);
-  --color-menuItemTextSelected: var(--palette-purple400);
-  --color-menuItemTextHeader: var(--palette-purple200);
-  --color-menuBorder: var(--palette-navy900);
-  --color-menuBorderHover: var(--palette-purple400);
-  --color-menuKeybindingText: var(--palette-purple200);
+  --color-menuItemTextSelected: var(--palette-forest300);
+  --color-menuItemTextHeader: var(--palette-forest200);
+  --color-menuBorder: var(--palette-gray700);
+  --color-menuBorderHover: var(--palette-forest300);
+  --color-menuKeybindingText: var(--palette-forest200);
   --color-menuAutoCompleteBackground: var(--palette-navy900);
   --color-menuAutoCompleteBackgroundHover: var(--palette-navy600);
   --color-menuAutoCompleteText: var(--palette-navy200);
-  --color-menuAutoCompleteTextHeader: var(--palette-purple200);
+  --color-menuAutoCompleteTextHeader: var(--palette-forest200);
   --color-menuAutoCompleteItemText: var(--color-menuItemText);
 
   --color-modalBackground: var(--palette-gray800);
-  --color-modalBorder: var(--palette-navy600);
-  --color-mobileHeaderBackground: var(--palette-purple800);
-  --color-mobileHeaderText: var(--palette-navy150);
+  --color-modalBorder: var(--palette-gray700);
+  --color-mobileHeaderBackground: var(--palette-forest900);
+  --color-mobileHeaderText: var(--palette-gray50);
   --color-mobileHeaderTextSubdued: var(--palette-gray200);
   --color-mobileHeaderTextHover: rgba(200, 200, 200, 0.15);
-  --color-mobilePageBackground: var(--palette-navy700);
-  --color-mobileNavBackground: var(--palette-navy800);
-  --color-mobileNavItem: var(--palette-navy150);
-  --color-mobileNavItemSelected: var(--palette-purple400);
+  --color-mobilePageBackground: var(--palette-gray900);
+  --color-mobileNavBackground: var(--palette-gray800);
+  --color-mobileNavItem: var(--palette-gray200);
+  --color-mobileNavItemSelected: var(--palette-forest300);
+  --color-mobileNavItemSelectedBackground: var(--palette-forest800);
   --color-mobileAccountShadow: var(--color-cardShadow);
   --color-mobileAccountText: var(--palette-blue800);
-  --color-mobileTransactionSelected: var(--palette-purple400);
+  --color-mobileTransactionSelected: var(--palette-forest300);
 
   --color-mobileViewTheme: var(--color-mobileHeaderBackground);
-  --color-mobileConfigServerViewTheme: var(--palette-purple500);
+  --color-mobileConfigServerViewTheme: var(--palette-forest500);
 
-  --color-markdownNormal: var(--palette-purple700);
-  --color-markdownDark: var(--palette-purple500);
-  --color-markdownLight: var(--palette-purple800);
+  --color-markdownNormal: var(--palette-forest800);
+  --color-markdownDark: var(--palette-forest500);
+  --color-markdownLight: var(--palette-forest900);
 
   --color-buttonMenuText: var(--palette-navy200);
   --color-buttonMenuTextHover: var(--color-buttonMenuText);
@@ -131,24 +132,24 @@
 
   --color-buttonPrimaryText: var(--palette-white);
   --color-buttonPrimaryTextHover: var(--color-buttonPrimaryText);
-  --color-buttonPrimaryBackground: var(--palette-purple400);
-  --color-buttonPrimaryBackgroundHover: var(--palette-purple600);
-  --color-buttonPrimaryBorder: var(--color-buttonPrimaryBackground);
-  --color-buttonPrimaryShadow: rgba(0, 0, 0, 0.6);
+  --color-buttonPrimaryBackground: var(--palette-forest500);
+  --color-buttonPrimaryBackgroundHover: var(--palette-forest400);
+  --color-buttonPrimaryBorder: var(--palette-forest500);
+  --color-buttonPrimaryShadow: rgba(0, 0, 0, 0.3);
   --color-buttonPrimaryDisabledText: var(--palette-navy700);
   --color-buttonPrimaryDisabledBackground: var(--palette-navy400);
   --color-buttonPrimaryDisabledBorder: var(
     --color-buttonPrimaryDisabledBackground
   );
 
-  --color-buttonNormalText: var(--palette-navy150);
+  --color-buttonNormalText: var(--palette-gray50);
   --color-buttonNormalTextHover: var(--palette-navy150);
-  --color-buttonNormalBackground: var(--palette-navy800);
-  --color-buttonNormalBackgroundHover: var(--palette-navy600);
-  --color-buttonNormalBorder: var(--palette-navy300);
+  --color-buttonNormalBackground: var(--palette-gray800);
+  --color-buttonNormalBackgroundHover: var(--palette-gray700);
+  --color-buttonNormalBorder: var(--palette-gray600);
   --color-buttonNormalShadow: rgba(0, 0, 0, 0.4);
   --color-buttonNormalSelectedText: var(--palette-white);
-  --color-buttonNormalSelectedBackground: var(--palette-purple600);
+  --color-buttonNormalSelectedBackground: var(--palette-forest500);
   --color-buttonNormalDisabledText: var(--palette-navy500);
   --color-buttonNormalDisabledBackground: var(--palette-navy800);
   --color-buttonNormalDisabledBorder: var(--palette-navy500);
@@ -160,7 +161,7 @@
   --color-calendarSelectedBackground: var(
     --color-buttonNormalSelectedBackground
   );
-  --color-datePickerRangeBackground: var(--palette-purple600);
+  --color-datePickerRangeBackground: var(--palette-forest800);
 
   --color-buttonBareText: var(--color-pageText);
   --color-buttonBareTextHover: var(--color-pageText);
@@ -189,46 +190,46 @@
   --color-errorTextDarker: var(--color-errorTextDark);
   --color-errorTextMenu: var(--palette-red200);
   --color-errorBorder: var(--palette-red500);
-  --color-upcomingBackground: var(--palette-purple700);
-  --color-upcomingText: var(--palette-purple100);
-  --color-upcomingBorder: var(--color-tableBorder);
+  --color-upcomingBackground: var(--palette-forest800);
+  --color-upcomingText: var(--palette-forest150);
+  --color-upcomingBorder: var(--palette-forest500);
 
-  --color-formLabelText: var(--palette-purple150);
-  --color-formLabelBackground: var(--palette-blue900);
-  --color-formInputBackground: var(--palette-navy800);
-  --color-formInputBackgroundSelected: var(--palette-navy700);
-  --color-formInputBackgroundSelection: var(--palette-purple400);
-  --color-formInputBorder: var(--palette-navy600);
+  --color-formLabelText: var(--palette-forest150);
+  --color-formLabelBackground: var(--palette-forest900);
+  --color-formInputBackground: var(--palette-gray800);
+  --color-formInputBackgroundSelected: var(--palette-gray800);
+  --color-formInputBackgroundSelection: var(--palette-forest600);
+  --color-formInputBorder: var(--palette-gray600);
   --color-formInputTextReadOnlySelection: var(--palette-navy800);
-  --color-formInputBorderSelected: var(--palette-purple400);
-  --color-formInputText: var(--palette-navy150);
+  --color-formInputBorderSelected: var(--palette-forest300);
+  --color-formInputText: var(--palette-gray50);
   --color-formInputTextSelected: var(--palette-black);
-  --color-formInputTextPlaceholder: var(--palette-navy150);
+  --color-formInputTextPlaceholder: var(--palette-gray300);
   --color-formInputTextPlaceholderSelected: var(--palette-navy100);
   --color-formInputTextSelection: var(--palette-navy800);
-  --color-formInputShadowSelected: var(--palette-purple200);
-  --color-formInputTextHighlight: var(--palette-purple400);
+  --color-formInputShadowSelected: rgba(121, 168, 145, 0.2);
+  --color-formInputTextHighlight: var(--palette-forest300);
   --color-checkboxText: var(--color-tableText);
-  --color-checkboxBackgroundSelected: var(--palette-purple300);
-  --color-checkboxBorderSelected: var(--palette-purple300);
-  --color-checkboxShadowSelected: var(--palette-purple500);
+  --color-checkboxBackgroundSelected: var(--palette-forest500);
+  --color-checkboxBorderSelected: var(--palette-forest500);
+  --color-checkboxShadowSelected: var(--palette-forest800);
   --color-checkboxToggleBackground: var(--palette-gray700);
-  --color-checkboxToggleBackgroundSelected: var(--palette-purple300);
+  --color-checkboxToggleBackgroundSelected: var(--palette-forest500);
   --color-checkboxToggleDisabled: var(--palette-gray400);
 
-  --color-pillBackground: var(--palette-navy800);
-  --color-pillBackgroundLight: var(--palette-navy900);
-  --color-pillText: var(--palette-navy200);
-  --color-pillTextHighlighted: var(--palette-purple200);
-  --color-pillBorder: var(--palette-navy700);
+  --color-pillBackground: var(--palette-forest800);
+  --color-pillBackgroundLight: var(--palette-gray800);
+  --color-pillText: var(--palette-gray100);
+  --color-pillTextHighlighted: var(--palette-forest200);
+  --color-pillBorder: var(--palette-gray600);
   --color-pillBorderDark: var(--color-pillBorder);
-  --color-pillBackgroundSelected: var(--palette-purple600);
-  --color-pillTextSelected: var(--palette-navy150);
-  --color-pillBorderSelected: var(--palette-purple400);
+  --color-pillBackgroundSelected: var(--palette-forest800);
+  --color-pillTextSelected: var(--palette-forest100);
+  --color-pillBorderSelected: var(--palette-forest300);
   --color-pillTextSubdued: var(--palette-navy500);
 
   --color-reportsRed: var(--palette-red300);
-  --color-reportsBlue: var(--palette-blue400);
+  --color-reportsBlue: var(--palette-forest300);
   --color-reportsGreen: var(--palette-green400);
   --color-reportsGray: var(--palette-gray400);
   --color-reportsLabel: var(--color-pageText);
@@ -238,17 +239,17 @@
   --color-reportsNumberNeutral: var(--color-numberNeutral);
   --color-reportsChartFill: var(--color-reportsNumberPositive);
 
-  --color-noteTagBackground: var(--palette-purple700);
-  --color-noteTagBackgroundHover: var(--palette-purple500);
-  --color-noteTagDefault: var(--palette-purple700);
-  --color-noteTagText: var(--palette-purple100);
+  --color-noteTagBackground: var(--palette-forest800);
+  --color-noteTagBackgroundHover: var(--palette-forest600);
+  --color-noteTagDefault: var(--palette-forest800);
+  --color-noteTagText: var(--palette-forest100);
 
   --color-budgetOtherMonth: var(--palette-navy900);
   --color-budgetCurrentMonth: var(--color-tableBackground);
   --color-budgetHeaderOtherMonth: var(--palette-navy800);
   --color-budgetHeaderCurrentMonth: var(--color-tableHeaderBackground);
 
-  --color-floatingActionBarBackground: var(--palette-purple800);
+  --color-floatingActionBarBackground: var(--palette-forest900);
   --color-floatingActionBarBorder: var(--color-floatingActionBarBackground);
   --color-floatingActionBarText: var(--palette-navy150);
 

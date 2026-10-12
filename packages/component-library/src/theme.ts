@@ -89,6 +89,8 @@ export const theme = {
   mobileNavBackground: 'var(--color-mobileNavBackground)',
   mobileNavItem: 'var(--color-mobileNavItem)',
   mobileNavItemSelected: 'var(--color-mobileNavItemSelected)',
+  mobileNavItemSelectedBackground:
+    'var(--color-mobileNavItemSelectedBackground)',
   mobileAccountShadow: 'var(--color-mobileAccountShadow)',
   mobileAccountText: 'var(--color-mobileAccountText)',
   mobileTransactionSelected: 'var(--color-mobileTransactionSelected)',

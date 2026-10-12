@@ -8,7 +8,7 @@ import { Text } from '@actual-app/components/text';
 import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 
-const HEADER_HEIGHT = 50;
+const HEADER_HEIGHT = 58;
 
 type PageHeaderProps = {
   title: ReactNode;
@@ -22,15 +22,21 @@ export function PageHeader({ title, style }: PageHeaderProps) {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        marginLeft: 20,
+        minHeight: 64,
+        marginLeft: 24,
+        marginRight: 24,
+        paddingBottom: 8,
+        marginBottom: 10,
         ...style,
       }}
     >
       <View
         style={{
           flexDirection: 'row',
-          fontSize: 25,
-          fontWeight: 500,
+          fontSize: 27,
+          lineHeight: 1.15,
+          fontWeight: 650,
+          letterSpacing: '-0.025em',
         }}
       >
         {typeof title === 'string' ? <Text>{title}</Text> : title}
@@ -85,8 +91,10 @@ export function MobilePageHeader({
           justifyContent: 'center',
           flexDirection: 'row',
           flexBasis: '50%',
-          fontSize: 17,
-          fontWeight: 500,
+          fontSize: 18,
+          lineHeight: 1.2,
+          fontWeight: 600,
+          letterSpacing: '-0.015em',
           overflowY: 'auto',
           display: 'flex',
           margin: 0,

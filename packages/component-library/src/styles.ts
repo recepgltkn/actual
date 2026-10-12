@@ -117,6 +117,10 @@ export const styles: CSSProperties = {
     ':focus': {
       outline: 'none',
     },
+    ':focus-visible': {
+      outline: `2px solid ${theme.buttonPrimaryBackground}`,
+      outlineOffset: 2,
+    },
   },
   lineClamp: (lines: number) => {
     return {

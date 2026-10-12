@@ -6,6 +6,7 @@ import { theme } from '@actual-app/components/theme';
 import { radius, spacing } from '@actual-app/components/tokens';
 import { View } from '@actual-app/components/view';
 
+import { ContourTrace } from '#components/ContourTrace';
 import { Link } from '#components/common/Link';
 
 type NavRowProps = {
@@ -33,8 +34,13 @@ export function NavRow({ title, Icon, to }: NavRowProps) {
           fontSize: 13,
           fontWeight: 500,
           textDecoration: 'none',
+          position: 'relative',
+          overflow: 'hidden',
           color: theme.sidebarItemText,
           ':hover': { backgroundColor: theme.sidebarItemBackgroundHover },
+          '&[aria-current="page"] .sidebar-contour-trace': {
+            opacity: 0.3,
+          },
         }}
         activeStyle={{
           backgroundColor: theme.sidebarItemBackgroundSelected,
@@ -44,6 +50,18 @@ export function NavRow({ title, Icon, to }: NavRowProps) {
       >
         <Icon width={15} height={15} style={{ flexShrink: 0 }} />
         <Text style={styles.ellipsisText}>{title}</Text>
+        <ContourTrace
+          className="sidebar-contour-trace"
+          style={{
+            position: 'absolute',
+            right: 6,
+            top: 0,
+            width: 78,
+            height: '100%',
+            opacity: 0,
+            pointerEvents: 'none',
+          }}
+        />
       </Link>
     </View>
   );

@@ -1,4 +1,22 @@
 :root {
+  --palette-forest50: #f1f7f3;
+  --palette-forest100: #e2eee7;
+  --palette-forest150: #c8ddd1;
+  --palette-forest200: #a7c7b6;
+  --palette-forest300: #79a891;
+  --palette-forest400: #5a9277;
+  --palette-forest500: #3f8066;
+  --palette-forest600: #326c56;
+  --palette-forest700: #285744;
+  --palette-forest800: #1e4638;
+  --palette-forest900: #14382f;
+
+  --palette-earth50: #fffdf7;
+  --palette-earth100: #f5f2e8;
+  --palette-earth150: #ebe7db;
+  --palette-earth200: #dcd8ca;
+  --palette-earth300: #c3beaf;
+
   --palette-gray50: #f6f8fa;
   --palette-gray80: #f0f4f6;
   --palette-gray100: #e8ecf0;

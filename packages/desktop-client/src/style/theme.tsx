@@ -24,6 +24,23 @@ const themes = {
   auto: { name: 'System default' },
 } as const;
 
+const interfaceBaseCss = `
+  :root {
+    font-family: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'ss01', 'ss04';
+  }
+  html, body, #root { min-height: 100%; }
+  body { color: var(--color-pageText); }
+  button, input, select, textarea { font: inherit; }
+  ::selection { color: var(--color-pageTextDark); background: var(--palette-forest150); }
+  :focus-visible { outline: 2px solid var(--color-buttonPrimaryBackground); outline-offset: 2px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--color-tableBorderSeparator); border: 3px solid var(--color-pageBackground); border-radius: 8px; }
+  ::-webkit-scrollbar-track { background: var(--color-pageBackground); }
+`;
+
 export const themeOptions = Object.entries(themes).map(
   ([key, { name }]) => [key, name] as [Theme, string],
 );
@@ -131,6 +148,7 @@ export function ThemeStyle() {
       <>
         <style>{paletteCss}</style>
         <style>{themeColors}</style>
+        <style>{interfaceBaseCss}</style>
         {sidebarRedesignCss != null && <style>{sidebarRedesignCss}</style>}
       </>
     );
@@ -148,6 +166,7 @@ export function ThemeStyle() {
     <>
       <style>{paletteCss}</style>
       <style media="(prefers-color-scheme: light)">{themeColors}</style>
+      <style>{interfaceBaseCss}</style>
       {sidebarRedesignCss != null && (
         <style media="(prefers-color-scheme: light)">
           {sidebarRedesignCss}
