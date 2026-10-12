@@ -20,14 +20,24 @@ done
 
 if [ "$SKIP_TRANSLATIONS" = false ]; then
   echo "Updating translations..."
-  if ! [ -d packages/desktop-client/locale ]; then
+  if [ -f packages/desktop-client/locale/tr.json ] && ! [ -f packages/desktop-client/locale/en.json ]; then
+      echo "Using the local Turkish translation."
+  elif ! [ -d packages/desktop-client/locale ]; then
       git clone https://github.com/actualbudget/translations packages/desktop-client/locale
+      pushd packages/desktop-client/locale > /dev/null
+      git checkout .
+      git pull
+      popd > /dev/null
+      packages/desktop-client/bin/remove-untranslated-languages
+  elif [ -f packages/desktop-client/locale/en.json ]; then
+      pushd packages/desktop-client/locale > /dev/null
+      git checkout .
+      git pull
+      popd > /dev/null
+      packages/desktop-client/bin/remove-untranslated-languages
+  else
+      echo "No translation repository found; using the available locale files."
   fi
-  pushd packages/desktop-client/locale > /dev/null
-  git checkout .
-  git pull
-  popd > /dev/null
-  packages/desktop-client/bin/remove-untranslated-languages
 fi
 
 lage build:browser --to=@actual-app/web

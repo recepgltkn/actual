@@ -65,6 +65,15 @@ runs:
       run: yarn --immutable
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
+    - name: Preserve local Turkish translation
+      id: preserve-turkish
+      run: |
+        if [ -f packages/desktop-client/locale/tr.json ]; then
+          cp packages/desktop-client/locale/tr.json "$RUNNER_TEMP/actual-tr.json"
+          echo "present=true" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash
+      if: ${{ inputs.download-translations == 'true' && !env.ACT }}
     - name: Download translations
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
@@ -72,6 +81,10 @@ runs:
         path: ${{ inputs.working-directory }}/packages/desktop-client/locale
         persist-credentials: false
       if: ${{ inputs.download-translations == 'true' && !env.ACT }}
+    - name: Restore local Turkish translation
+      run: cp "$RUNNER_TEMP/actual-tr.json" packages/desktop-client/locale/tr.json
+      shell: bash
+      if: ${{ inputs.download-translations == 'true' && !env.ACT && steps.preserve-turkish.outputs.present == 'true' }}
     - name: Remove untranslated languages
       run: packages/desktop-client/bin/remove-untranslated-languages
       shell: bash
