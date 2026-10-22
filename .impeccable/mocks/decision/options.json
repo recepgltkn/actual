@@ -1,0 +1,147 @@
+{
+  "title": "Uygulamanın görsel kimliğini seç",
+  "question": "Atanan yön Contour Atlas. Bu kimliği seç, alternatiflerden birini al veya yeni bir el iste.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Contour Atlas",
+      "kicker": "THE ROLL",
+      "lineage": "Survey topography and national park maps",
+      "thesis": "Household budgets become a clear landscape of named, readable money zones.",
+      "palette": ["#143b35", "#f3f0e5", "#3f8873", "#e1a64c"],
+      "materials": ["contour hairlines", "warm map stock"],
+      "viewport": "A deep green navigation rail frames a warm canvas; monthly income and remaining-to-budget lead, with envelope rows grouped into quiet terrain bands. Fine contour lines trace the selected envelope; all amounts and controls stay plain and high contrast.",
+      "risk": "Contour lines can become decoration; they must stay sparse and never cross amounts or controls.",
+      "raised": [
+        {
+          "from": "Teletext Service",
+          "raise": "The screen now commits to a complete palette across shell, states, selection, and data, with one accent owning live focus."
+        },
+        {
+          "from": "Microfiche Reader",
+          "raise": "The warm canvas and deep shell create one continuous environment instead of isolated floating cards."
+        },
+        {
+          "from": "Centre Rail Reference Setting",
+          "raise": "Every annotation and category label stays explicitly attached to its amount and group."
+        },
+        {
+          "from": "Saville Catalog Sleeve",
+          "raise": "The contour pattern is restrained to one meaningful selection state, leaving the rest of the surface quiet."
+        },
+        {
+          "from": "Darkroom Exposure Record",
+          "raise": "Budget states use clear labels and patterns alongside color, so no amount depends on hue alone."
+        }
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html",
+      "comp": ".impeccable/mocks/decision/assigned.webp",
+      "hero": "https://impeccable.style/worlds/cards/operate-b-exposure-record-zone-sheets-hero.webp"
+    },
+    {
+      "id": "model-pick",
+      "label": "Field Guide",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Contemporary botanical field guides",
+      "thesis": "A living household plan, organized like a beautifully precise field guide.",
+      "palette": ["#253c32", "#f4efe2", "#c4d6a3", "#c45d42"],
+      "materials": ["pressed-paper tones", "botanical linework"],
+      "viewport": "A compact navigation rail leads to a broad monthly overview; envelope groups read as labeled specimens with amounts, progress, and small botanical marks.",
+      "risk": "Botanical illustration is familiar and can drift into lifestyle branding.",
+      "html": ".impeccable/mocks/decision/model-pick.html",
+      "comp": ".impeccable/mocks/decision/model-pick.webp"
+    },
+    {
+      "id": "challenger-zoo-map",
+      "label": "Garden Map",
+      "verdict": "competitive",
+      "lineage": "Public garden and zoo guide maps",
+      "thesis": "Envelope groups form distinct, friendly regions in a household money map.",
+      "palette": ["#2c3a32", "#f5f1e4", "#8ed462", "#ff705d", "#2ba0ff"],
+      "materials": ["flat color fields", "organic region edges"],
+      "viewport": "A familiar sidebar and month selector frame grouped envelope lists; selected groups receive a bold region color and amounts remain in clear rows.",
+      "case": "Strong audience fit for family budgets; loses narrowly on dense financial data clarity.",
+      "risk": "Large color regions may compete with transaction and balance reading.",
+      "html": ".impeccable/mocks/decision/challenger-zoo-map.html",
+      "comp": ".impeccable/mocks/decision/challenger-zoo-map.webp",
+      "hero": "https://impeccable.style/worlds/cards/aww2-zoo-gardens-guide-map-hero.webp"
+    },
+    {
+      "id": "challenger-crouwel",
+      "label": "Grid Specimen",
+      "verdict": "competitive",
+      "lineage": "Wim Crouwel grid-built typography",
+      "thesis": "A precise visible grid gives every balance and envelope a deliberate place.",
+      "palette": ["#f8f8f4", "#182c48", "#b7c8d8", "#dd5948"],
+      "materials": ["fine construction grid", "oversized modular numerals"],
+      "viewport": "Standard app navigation and overview areas sit on a visible modular grid; a large monthly balance leads above tightly aligned account and envelope rows.",
+      "case": "Excellent scanability, but its typographic formalism has less connection to household routines.",
+      "risk": "Large constructed numerals can overpower ordinary transaction work.",
+      "html": ".impeccable/mocks/decision/challenger-crouwel.html",
+      "comp": ".impeccable/mocks/decision/challenger-crouwel.webp",
+      "hero": "https://impeccable.style/worlds/cards/crouwel-grid-specimen-hero.webp"
+    },
+    {
+      "id": "challenger-streaming",
+      "label": "Streaming Catalog Wall",
+      "verdict": "declined",
+      "lineage": "Streaming title-card catalogs",
+      "palette": ["#17191c", "#f4f2ec", "#a9d6c3"],
+      "materials": ["deep neutral ground", "full-bleed art tiles"],
+      "case": "Weakens both household identification and the clarity of dense budget data.",
+      "kept": "A strong focus state that lets the active budget area stand out.",
+      "risk": "Artwork tiles are a poor carrier for real transactions.",
+      "hero": "https://impeccable.style/worlds/cards/pop-culture-shelf-streaming-title-card-wall-hero.webp"
+    },
+    {
+      "id": "challenger-reference",
+      "label": "Centre Rail Reference Setting",
+      "verdict": "declined",
+      "lineage": "Wide-margin reference editions",
+      "palette": ["#f1ead9", "#252522", "#d44733"],
+      "materials": ["unbleached paper", "hairline rules"],
+      "case": "Its two-column editorial form is less familiar and slower for routine budgeting.",
+      "kept": "Labels and annotations remain visibly attached to the number they explain.",
+      "risk": "Editorial columns can fragment a working budget screen.",
+      "hero": "https://impeccable.style/worlds/cards/rw-centre-rail-reference-setting-hero.webp"
+    },
+    {
+      "id": "challenger-saville",
+      "label": "Catalog Sleeve",
+      "verdict": "declined",
+      "lineage": "Peter Saville catalog sleeve identity",
+      "palette": ["#101112", "#f3f1eb", "#da644e"],
+      "materials": ["matte dark field", "white pulse line"],
+      "case": "Encoded labels obscure household categories and everyday budget meaning.",
+      "kept": "A distinctive, consistent signal can carry active selection across screens.",
+      "risk": "Minimal coding can hide useful labels.",
+      "hero": "https://impeccable.style/worlds/cards/brand-identity-canon-saville-catalog-sleeve-hero.webp"
+    },
+    {
+      "id": "challenger-darkroom",
+      "label": "Exposure Record",
+      "verdict": "declined",
+      "lineage": "Darkroom exposure records and zone scales",
+      "palette": ["#eceae2", "#21252a", "#b64689"],
+      "materials": ["backlit neutral ramp", "cross-hatching"],
+      "case": "Its layered sheets add visual complexity to a routine household task.",
+      "kept": "Money states carry explicit labels and non-color cues.",
+      "risk": "Layered regions may imply confusing relationships between budgets.",
+      "hero": "https://impeccable.style/worlds/cards/operate-b-exposure-record-zone-sheets-hero.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": true },
+  "canon": true,
+  "canonCard": {
+    "label": "Category standard",
+    "thesis": "A polished, conventional personal finance interface with quiet neutral surfaces.",
+    "palette": ["#ffffff", "#20242b", "#4f46e5"],
+    "materials": ["clean grid", "subtle borders"],
+    "viewport": "Standard sidebar navigation, month controls, a balance summary, and a readable envelope table.",
+    "risk": "Clear and familiar, with little identity of its own.",
+    "comp": ".impeccable/mocks/decision/canon.webp",
+    "html": ".impeccable/mocks/decision/canon.html"
+  },
+  "steer": true
+}

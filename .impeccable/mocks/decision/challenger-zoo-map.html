@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f5f1e4;
+        color: #2c2e2a;
+        font:
+          14px Arial,
+          sans-serif;
+        height: 900px;
+        overflow: hidden;
+      }
+      .app {
+        display: flex;
+        height: 100%;
+      }
+      .rail {
+        width: 235px;
+        background: #2c3a32;
+        color: #f8f5ec;
+        padding: 28px 20px;
+      }
+      .brand {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 50px;
+      }
+      .nav {
+        padding: 13px 11px;
+        margin: 4px 0;
+        color: #dbe2d5;
+      }
+      .sel {
+        background: #425447;
+        border-radius: 22px;
+      }
+      .label {
+        font-size: 10px;
+        letter-spacing: 1px;
+        margin: 25px 12px 6px;
+        color: #bdc9ae;
+      }
+      .main {
+        padding: 35px 42px;
+        flex: 1;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        color: #718073;
+      }
+      .h {
+        font-size: 30px;
+        font-weight: 700;
+        margin: 8px 0;
+      }
+      .switch {
+        padding: 10px 14px;
+        border: 1px solid #d0d2c6;
+        border-radius: 22px;
+        background: #fffdf5;
+      }
+      .stats {
+        display: flex;
+        gap: 13px;
+        margin: 25px 0;
+      }
+      .stat,
+      .panel {
+        background: #fffdf5;
+        border-radius: 15px;
+        padding: 17px 20px;
+      }
+      .stat {
+        min-width: 180px;
+      }
+      .st {
+        font-size: 12px;
+        color: #73786f;
+      }
+      .v {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 7px;
+        font-variant-numeric: tabular-nums;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 0.9fr;
+        gap: 18px;
+      }
+      .panel {
+        padding: 20px;
+      }
+      .title {
+        font-weight: 700;
+        font-size: 17px;
+        margin-bottom: 15px;
+      }
+      .region {
+        padding: 15px;
+        border-radius: 18px;
+        margin: 9px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .one {
+        background: #d8eac9;
+      }
+      .two {
+        background: #fde4d8;
+      }
+      .three {
+        background: #d7e9f2;
+      }
+      .name {
+        font-weight: bold;
+      }
+      .sub {
+        font-size: 12px;
+        margin-top: 4px;
+        color: #59645a;
+      }
+      .amt {
+        font-weight: bold;
+        font-variant-numeric: tabular-nums;
+      }
+      .tx {
+        padding: 15px 0;
+        border-top: 1px solid #e4e3d7;
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="rail">
+        <div class="brand">Actual</div>
+        <div class="nav sel">Overview</div>
+        <div class="nav">Transactions</div>
+        <div class="nav">Reports</div>
+        <div class="label">BUDGET</div>
+        <div class="nav">Monthly budget</div>
+        <div class="nav">Categories</div>
+        <div class="label">ACCOUNTS</div>
+        <div class="nav">Everyday checking</div>
+        <div class="nav">Savings</div>
+      </aside>
+      <main class="main">
+        <div class="top">
+          <div>
+            <div class="eyebrow">HOUSEHOLD MONEY MAP</div>
+            <div class="h">October overview</div>
+          </div>
+          <div class="switch">‹ &nbsp; October 2026 &nbsp; ›</div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="st">Available to budget</div>
+            <div class="v">₺18.420</div>
+          </div>
+          <div class="stat">
+            <div class="st">Assigned this month</div>
+            <div class="v">₺42.600</div>
+          </div>
+          <div class="stat">
+            <div class="st">Left to spend</div>
+            <div class="v">₺12.840</div>
+          </div>
+        </div>
+        <div class="grid">
+          <section class="panel">
+            <div class="title">Monthly envelopes</div>
+            <div class="region one">
+              <div>
+                <div class="name">Home</div>
+                <div class="sub">Rent · utilities · repairs</div>
+              </div>
+              <div class="amt">₺21.400</div>
+            </div>
+            <div class="region two">
+              <div>
+                <div class="name">Everyday</div>
+                <div class="sub">Groceries · transport · coffee</div>
+              </div>
+              <div class="amt">₺8.250</div>
+            </div>
+            <div class="region three">
+              <div>
+                <div class="name">Future</div>
+                <div class="sub">Savings · annual bills</div>
+              </div>
+              <div class="amt">₺12.950</div>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="title">Recent activity</div>
+            <div class="tx">
+              <span>Market Şok<br /><small>Groceries · today</small></span
+              ><b>−₺486</b>
+            </div>
+            <div class="tx">
+              <span
+                >Metro İstanbul<br /><small>Transport · yesterday</small></span
+              ><b>−₺35</b>
+            </div>
+            <div class="tx">
+              <span>Salary<br /><small>Income · Oct 1</small></span
+              ><b>+₺54.000</b>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

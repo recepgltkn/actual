@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background-color: #f8f8f4;
+        color: #182c48;
+        font:
+          14px Arial,
+          sans-serif;
+        height: 900px;
+        overflow: hidden;
+        background-image:
+          linear-gradient(#b7c8d844 1px, transparent 1px),
+          linear-gradient(90deg, #b7c8d844 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+      .app {
+        display: flex;
+        height: 100%;
+      }
+      .rail {
+        width: 230px;
+        background: #182c48;
+        color: #eef1f5;
+        padding: 28px 20px;
+      }
+      .brand {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 50px;
+      }
+      .nav {
+        padding: 12px;
+        margin: 4px 0;
+        color: #d2dbe4;
+      }
+      .sel {
+        background: #304664;
+      }
+      .label {
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: #91a3b5;
+        margin: 24px 12px 7px;
+      }
+      .main {
+        padding: 34px 42px;
+        flex: 1;
+      }
+      .head {
+        display: flex;
+        justify-content: space-between;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 1px;
+        color: #546b83;
+      }
+      .h {
+        font-size: 30px;
+        font-weight: 700;
+        margin: 8px 0;
+      }
+      .switch {
+        border: 1px solid #9eb0c1;
+        padding: 10px 13px;
+        background: #f8f8f4;
+      }
+      .hero {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        border-bottom: 2px solid #182c48;
+        padding: 12px 0 25px;
+        margin: 20px 0;
+      }
+      .big {
+        font-size: 72px;
+        font-weight: 300;
+        letter-spacing: -5px;
+      }
+      .meta {
+        font-size: 12px;
+        line-height: 1.8;
+      }
+      .stats {
+        display: flex;
+        gap: 0;
+        border-block: 1px solid #9eb0c1;
+        margin: 20px 0;
+      }
+      .stat {
+        padding: 14px 22px;
+        border-right: 1px solid #9eb0c1;
+        flex: 1;
+      }
+      .lab {
+        font-size: 11px;
+        color: #536a82;
+      }
+      .val {
+        font-size: 23px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        margin-top: 5px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 32px;
+      }
+      .title {
+        font-weight: 700;
+        margin: 12px 0;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 13px 6px;
+        border-top: 1px solid #9eb0c1;
+      }
+      .amount {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="rail">
+        <div class="brand">Actual</div>
+        <div class="nav sel">Overview</div>
+        <div class="nav">Transactions</div>
+        <div class="nav">Reports</div>
+        <div class="label">BUDGET</div>
+        <div class="nav">Monthly budget</div>
+        <div class="nav">Categories</div>
+        <div class="label">ACCOUNTS</div>
+        <div class="nav">Everyday checking</div>
+        <div class="nav">Savings</div>
+      </aside>
+      <main class="main">
+        <div class="head">
+          <div>
+            <div class="eyebrow">OCTOBER / 2026 / OVERVIEW</div>
+            <div class="h">Budget overview</div>
+          </div>
+          <div class="switch">‹ &nbsp; October 2026 &nbsp; ›</div>
+        </div>
+        <div class="hero">
+          <div class="big">18<br />420</div>
+          <div class="meta">
+            <b>AVAILABLE TO BUDGET</b><br />TRY · OCTOBER 2026<br />Last month:
+            ₺12.780
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="lab">ASSIGNED</div>
+            <div class="val">₺42.600</div>
+          </div>
+          <div class="stat">
+            <div class="lab">LEFT TO SPEND</div>
+            <div class="val">₺12.840</div>
+          </div>
+          <div class="stat">
+            <div class="lab">MONTHLY INCOME</div>
+            <div class="val">₺54.000</div>
+          </div>
+        </div>
+        <div class="grid">
+          <section>
+            <div class="title">MONTHLY ENVELOPES</div>
+            <div class="row">
+              <span>01 &nbsp; Home</span><b class="amount">₺21.400</b>
+            </div>
+            <div class="row">
+              <span>02 &nbsp; Everyday</span><b class="amount">₺8.250</b>
+            </div>
+            <div class="row">
+              <span>03 &nbsp; Future</span><b class="amount">₺12.950</b>
+            </div>
+          </section>
+          <section>
+            <div class="title">RECENT ACTIVITY</div>
+            <div class="row">
+              <span>Market Şok</span><b class="amount">−₺486</b>
+            </div>
+            <div class="row">
+              <span>Metro İstanbul</span><b class="amount">−₺35</b>
+            </div>
+            <div class="row">
+              <span>Salary</span><b class="amount">+₺54.000</b>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,268 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f3f0e5;
+        color: #20332d;
+        font:
+          14px Inter,
+          Arial,
+          sans-serif;
+        height: 900px;
+        overflow: hidden;
+      }
+      .app {
+        display: flex;
+        height: 100%;
+      }
+      .rail {
+        width: 230px;
+        background: #143b35;
+        color: #eef2e8;
+        padding: 28px 20px;
+      }
+      .brand {
+        font-size: 22px;
+        font-weight: 750;
+        letter-spacing: -1px;
+        margin-bottom: 52px;
+      }
+      .nav {
+        padding: 13px 12px;
+        margin: 4px 0;
+        border-radius: 8px;
+        color: #d0ddd5;
+      }
+      .nav.sel {
+        background: #285b4f;
+        color: white;
+      }
+      .section {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: #a8c1b5;
+        margin: 25px 12px 8px;
+      }
+      .main {
+        flex: 1;
+        padding: 32px 42px;
+        position: relative;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        color: #72857c;
+        text-transform: uppercase;
+      }
+      .h {
+        font-size: 31px;
+        font-weight: 700;
+        letter-spacing: -1.2px;
+        margin: 9px 0;
+      }
+      .switch {
+        border: 1px solid #c9d2c7;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: #faf9f3;
+      }
+      .stats {
+        display: flex;
+        gap: 14px;
+        margin: 25px 0;
+      }
+      .stat {
+        background: #faf9f3;
+        border: 1px solid #d9ddd2;
+        border-radius: 12px;
+        padding: 17px 20px;
+        min-width: 190px;
+      }
+      .label {
+        font-size: 12px;
+        color: #758078;
+      }
+      .value {
+        font-size: 25px;
+        font-weight: 700;
+        margin-top: 6px;
+        font-variant-numeric: tabular-nums;
+      }
+      .green {
+        color: #24684f;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+      }
+      .panel {
+        background: #faf9f3;
+        border: 1px solid #d9ddd2;
+        border-radius: 12px;
+        padding: 20px;
+      }
+      .pt {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #e3e4db;
+        padding: 15px 2px;
+      }
+      .name {
+        font-weight: 600;
+      }
+      .sub {
+        font-size: 12px;
+        color: #7b837b;
+        margin-top: 4px;
+      }
+      .amount {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .bar {
+        height: 5px;
+        background: #e6e6dc;
+        border-radius: 4px;
+        margin-top: 9px;
+        width: 270px;
+      }
+      .fill {
+        height: 100%;
+        width: 68%;
+        background: #3f8873;
+        border-radius: 4px;
+      }
+      .contour {
+        position: absolute;
+        right: 68px;
+        bottom: 43px;
+        width: 210px;
+        height: 100px;
+        border: 1px solid #9bb5a8;
+        border-radius: 48% 52% 42% 58%;
+        opacity: 0.55;
+        transform: rotate(-9deg);
+        box-shadow:
+          0 9px 0 -1px #f3f0e5,
+          0 10px 0 0 #9bb5a8,
+          0 20px 0 -1px #f3f0e5,
+          0 21px 0 0 #9bb5a8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="rail">
+        <div class="brand">Actual</div>
+        <div class="nav sel">Overview</div>
+        <div class="nav">Transactions</div>
+        <div class="nav">Reports</div>
+        <div class="section">BUDGET</div>
+        <div class="nav">Monthly budget</div>
+        <div class="nav">Categories</div>
+        <div class="section">ACCOUNTS</div>
+        <div class="nav">Everyday checking</div>
+        <div class="nav">Savings</div>
+      </aside>
+      <main class="main">
+        <div class="top">
+          <div>
+            <div class="eyebrow">Monday, October 12</div>
+            <div class="h">October overview</div>
+          </div>
+          <div class="switch">‹ &nbsp; October 2026 &nbsp; ›</div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Available to budget</div>
+            <div class="value">₺18.420</div>
+          </div>
+          <div class="stat">
+            <div class="label">Assigned this month</div>
+            <div class="value">₺42.600</div>
+          </div>
+          <div class="stat">
+            <div class="label">Left to spend</div>
+            <div class="value green">₺12.840</div>
+          </div>
+        </div>
+        <div class="grid">
+          <section class="panel">
+            <div class="pt">Monthly envelopes</div>
+            <div class="row">
+              <div>
+                <div class="name">Home</div>
+                <div class="sub">Rent · utilities · repairs</div>
+                <div class="bar"><div class="fill"></div></div>
+              </div>
+              <div class="amount">₺21.400</div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="name">Everyday</div>
+                <div class="sub">Groceries · transport · coffee</div>
+                <div class="bar">
+                  <div class="fill" style="width: 42%"></div>
+                </div>
+              </div>
+              <div class="amount">₺8.250</div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="name">Future</div>
+                <div class="sub">Savings · annual bills</div>
+                <div class="bar">
+                  <div class="fill" style="width: 80%"></div>
+                </div>
+              </div>
+              <div class="amount">₺12.950</div>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="pt">Recent activity</div>
+            <div class="row">
+              <div>
+                <div class="name">Market Şok</div>
+                <div class="sub">Groceries · today</div>
+              </div>
+              <div class="amount">−₺486</div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="name">Metro İstanbul</div>
+                <div class="sub">Transport · yesterday</div>
+              </div>
+              <div class="amount">−₺35</div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="name">Salary</div>
+                <div class="sub">Income · Oct 1</div>
+              </div>
+              <div class="amount green">+₺54.000</div>
+            </div>
+          </section>
+        </div>
+        <div class="contour"></div>
+      </main>
+    </div>
+  </body>
+</html>

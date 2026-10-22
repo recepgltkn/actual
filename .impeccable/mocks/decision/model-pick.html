@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f4efe2;
+        color: #26392f;
+        font:
+          14px Inter,
+          Arial,
+          sans-serif;
+        height: 900px;
+        overflow: hidden;
+      }
+      .app {
+        display: flex;
+        height: 100%;
+      }
+      .rail {
+        width: 225px;
+        background: #253c32;
+        color: #f4efe2;
+        padding: 28px 20px;
+      }
+      .brand {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 50px;
+      }
+      .nav {
+        padding: 12px;
+        margin: 4px 0;
+        border-radius: 5px;
+        color: #ced8c8;
+      }
+      .sel {
+        background: #40594a;
+        color: #fff;
+      }
+      .section {
+        margin: 24px 12px 7px;
+        color: #a5b99e;
+        font-size: 10px;
+        letter-spacing: 1.4px;
+      }
+      .main {
+        padding: 35px 42px;
+        flex: 1;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+      }
+      .eyebrow {
+        color: #718074;
+        font-size: 11px;
+        letter-spacing: 1.4px;
+      }
+      .h {
+        font-size: 30px;
+        font-weight: 700;
+        margin: 8px 0;
+      }
+      .switch {
+        border: 1px solid #d1d5c7;
+        padding: 10px;
+        border-radius: 6px;
+        background: #fbf9f2;
+      }
+      .stats {
+        display: flex;
+        gap: 14px;
+        margin: 24px 0;
+      }
+      .stat,
+      .panel {
+        background: #fbf9f2;
+        border: 1px solid #d8d9cc;
+        border-radius: 10px;
+      }
+      .stat {
+        padding: 17px 20px;
+        min-width: 185px;
+      }
+      .label,
+      .sub {
+        font-size: 12px;
+        color: #738075;
+      }
+      .value {
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 7px;
+        font-variant-numeric: tabular-nums;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .panel {
+        padding: 20px;
+      }
+      .pt {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 13px;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #e3e2d6;
+        padding: 14px 0;
+      }
+      .spec {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .leaf {
+        width: 25px;
+        height: 31px;
+        border-radius: 90% 0 90% 0;
+        background: #c4d6a3;
+        border: 1px solid #839c72;
+      }
+      .amount {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .badge {
+        font-size: 10px;
+        color: #8b4736;
+        border: 1px solid #dcb7a4;
+        padding: 3px 6px;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="rail">
+        <div class="brand">Actual</div>
+        <div class="nav sel">Overview</div>
+        <div class="nav">Transactions</div>
+        <div class="nav">Reports</div>
+        <div class="section">BUDGET</div>
+        <div class="nav">Monthly budget</div>
+        <div class="nav">Categories</div>
+        <div class="section">ACCOUNTS</div>
+        <div class="nav">Everyday checking</div>
+        <div class="nav">Savings</div>
+      </aside>
+      <main class="main">
+        <div class="top">
+          <div>
+            <div class="eyebrow">YOUR HOUSEHOLD FIELD GUIDE</div>
+            <div class="h">October overview</div>
+          </div>
+          <div class="switch">‹ &nbsp; October 2026 &nbsp; ›</div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Available to budget</div>
+            <div class="value">₺18.420</div>
+          </div>
+          <div class="stat">
+            <div class="label">Assigned this month</div>
+            <div class="value">₺42.600</div>
+          </div>
+          <div class="stat">
+            <div class="label">Left to spend</div>
+            <div class="value">₺12.840</div>
+          </div>
+        </div>
+        <div class="layout">
+          <section class="panel">
+            <div class="pt">Monthly envelopes</div>
+            <div class="row">
+              <div class="spec">
+                <div class="leaf"></div>
+                <div>
+                  <b>Home</b>
+                  <div class="sub">Rent, utilities, repairs</div>
+                </div>
+              </div>
+              <div class="amount">₺21.400</div>
+            </div>
+            <div class="row">
+              <div class="spec">
+                <div class="leaf" style="background: #e7d9ad"></div>
+                <div>
+                  <b>Everyday</b>
+                  <div class="sub">Groceries, transport</div>
+                </div>
+              </div>
+              <div class="amount">₺8.250</div>
+            </div>
+            <div class="row">
+              <div class="spec">
+                <div class="leaf" style="background: #d5b9a1"></div>
+                <div>
+                  <b>Future</b>
+                  <div class="sub">Savings, annual bills</div>
+                </div>
+              </div>
+              <div class="amount">₺12.950</div>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="pt">Recent activity</div>
+            <div class="row">
+              <div>
+                <b>Market Şok</b>
+                <div class="sub">Groceries · today</div>
+              </div>
+              <div class="amount">−₺486</div>
+            </div>
+            <div class="row">
+              <div>
+                <b>Metro İstanbul</b>
+                <div class="sub">Transport · yesterday</div>
+              </div>
+              <div class="amount">−₺35</div>
+            </div>
+            <div class="row">
+              <div>
+                <b>Salary</b>
+                <div class="sub">Income · Oct 1</div>
+              </div>
+              <div class="amount">+₺54.000</div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
