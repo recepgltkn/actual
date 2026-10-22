@@ -8,6 +8,7 @@ import type { CSSProperties } from '@actual-app/components/styles';
 import { Text } from '@actual-app/components/text';
 import { theme } from '@actual-app/components/theme';
 import { css } from '@emotion/css';
+import { cx } from '@emotion/css';
 
 import { useNavigate } from '#hooks/useNavigate';
 
@@ -34,6 +35,7 @@ type InternalLinkProps = {
   children?: ReactNode;
   isDisabled?: boolean;
   isExactPathMatch?: boolean;
+  className?: string;
 };
 
 const externalLinkColors = {
@@ -126,6 +128,7 @@ const InternalLink = ({
   children,
   isDisabled,
   isExactPathMatch = false,
+  className,
 }: InternalLinkProps) => {
   const path = to ?? '';
   const match = useMatch({ path, end: isExactPathMatch });
@@ -133,7 +136,10 @@ const InternalLink = ({
   return (
     <NavLink
       to={path}
-      className={css([styles.smallText, style, match ? activeStyle : null])}
+      className={cx(
+        css([styles.smallText, style, match ? activeStyle : null]),
+        className,
+      )}
       onClick={e => {
         if (isDisabled) {
           e.preventDefault();

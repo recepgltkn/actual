@@ -1,5 +1,6 @@
 // @ts-strict-ignore
 import React from 'react';
+import { css } from '@emotion/css';
 import type {
   ComponentProps,
   ComponentType,
@@ -45,6 +46,13 @@ export function Item({
   const hoverStyle = {
     backgroundColor: theme.sidebarItemBackgroundHover,
   };
+  const itemClassName = css({
+    ...(forceHover ? hoverStyle : {}),
+    '&:hover': hoverStyle,
+    '&[aria-current="page"] .sidebar-contour-trace': {
+      opacity: 0.3,
+    },
+  });
 
   const content = (
     <View
@@ -78,6 +86,7 @@ export function Item({
   return (
     <View style={{ flexShrink: 0, ...style }}>
       <ItemContent
+        className={itemClassName}
         style={{
           ...styles.mediumText,
           margin: '2px 8px',
@@ -85,11 +94,6 @@ export function Item({
           padding: '9px 12px',
           textDecoration: 'none',
           color: theme.sidebarItemText,
-          '&[aria-current="page"] .sidebar-contour-trace': {
-            opacity: 0.3,
-          },
-          ...(forceHover ? hoverStyle : {}),
-          ':hover': hoverStyle,
         }}
         forceActive={forceActive}
         activeStyle={{

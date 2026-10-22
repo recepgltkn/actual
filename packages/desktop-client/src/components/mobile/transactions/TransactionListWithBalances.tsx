@@ -12,9 +12,11 @@ import type { IntegerAmount } from '@actual-app/core/shared/util';
 import type { TransactionEntity } from '@actual-app/core/types/models';
 
 import { Search } from '#components/common/Search';
+import { FinancialText } from '#components/FinancialText';
 import { PullToRefresh } from '#components/mobile/PullToRefresh';
 import { CellValue, CellValueText } from '#components/spreadsheet/CellValue';
 import { DisplayPayeeProvider } from '#hooks/useDisplayPayee';
+import { useFormat } from '#hooks/useFormat';
 import { SelectedProvider, useSelected } from '#hooks/useSelected';
 import { useSheetValue } from '#hooks/useSheetValue';
 import type { Binding, SheetFields, SheetNames } from '#spreadsheet';
@@ -63,7 +65,7 @@ function TransactionSearchInput({
 type TransactionListWithBalancesProps = {
   isLoading: boolean;
   transactions: readonly TransactionEntity[];
-  balance:
+  balance?:
     | Binding<'account', 'onbudget-accounts-balance'>
     | Binding<'account', 'offbudget-accounts-balance'>
     | Binding<'account', 'closed-accounts-balance'>
@@ -71,6 +73,7 @@ type TransactionListWithBalancesProps = {
     | Binding<'category', 'balance'>
     | Binding<'account', 'balance'>
     | Binding<'account', 'accounts-balance'>;
+  balanceAmount?: IntegerAmount;
   balanceCleared?:
     | Binding<'category', 'balanceCleared'>
     | Binding<'account', 'balanceCleared'>;
@@ -95,6 +98,7 @@ export function TransactionListWithBalances({
   isLoading,
   transactions,
   balance,
+  balanceAmount,
   balanceCleared,
   balanceUncleared,
   showRunningBalances,
@@ -127,7 +131,7 @@ export function TransactionListWithBalances({
               justifyContent: 'space-evenly',
             }}
           >
-            {balanceCleared && balanceUncleared ? (
+            {balanceCleared && balanceUncleared && balance ? (
               <BalanceWithCleared
                 balance={balance}
                 balanceCleared={balanceCleared}
@@ -137,7 +141,11 @@ export function TransactionListWithBalances({
             ) : (
               <>
                 <View style={{ flexBasis: '33%' }} />
-                <Balance balance={balance} />
+                {balanceAmount !== undefined ? (
+                  <BalanceAmount amount={balanceAmount} />
+                ) : (
+                  balance && <Balance balance={balance} />
+                )}
                 <View
                   style={{
                     flexBasis: '33%',
@@ -329,6 +337,33 @@ function Balance({ balance }: BalanceProps) {
           />
         )}
       </TransactionListBalanceCellValue>
+    </View>
+  );
+}
+
+function BalanceAmount({ amount }: { amount: IntegerAmount }) {
+  const { t } = useTranslation();
+  const format = useFormat();
+
+  return (
+    <View style={{ flexBasis: '33%' }}>
+      <Label title={t('Total')} style={{ textAlign: 'center' }} />
+      <FinancialText
+        style={{
+          fontSize: 18,
+          textAlign: 'center',
+          fontWeight: '500',
+          color:
+            amount < 0
+              ? theme.numberNegative
+              : amount > 0
+                ? theme.numberPositive
+                : theme.numberNeutral,
+        }}
+        data-testid="transactions-total"
+      >
+        {format(amount, 'financial')}
+      </FinancialText>
     </View>
   );
 }

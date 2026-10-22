@@ -9,6 +9,7 @@ import { Link } from '#components/common/Link';
 
 type ItemContentProps = {
   style: ComponentProps<typeof View>['style'];
+  className?: string;
   to: string;
   onClick: ComponentProps<typeof Button>['onPress'];
   activeStyle: CSSProperties;
@@ -18,6 +19,7 @@ type ItemContentProps = {
 
 export function ItemContent({
   style,
+  className,
   to,
   onClick,
   activeStyle,
@@ -27,6 +29,7 @@ export function ItemContent({
   return onClick ? (
     <Button
       variant="bare"
+      className={className}
       style={{
         justifyContent: 'flex-start',
         ...style,
@@ -37,7 +40,13 @@ export function ItemContent({
       {children}
     </Button>
   ) : (
-    <Link variant="internal" to={to} style={style} activeStyle={activeStyle}>
+    <Link
+      variant="internal"
+      to={to}
+      style={style}
+      activeStyle={activeStyle}
+      className={className}
+    >
       {children}
     </Link>
   );
