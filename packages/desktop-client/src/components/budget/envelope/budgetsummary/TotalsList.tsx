@@ -8,7 +8,12 @@ import { styles } from '@actual-app/components/styles';
 import { Tooltip } from '@actual-app/components/tooltip';
 import { View } from '@actual-app/components/view';
 
-import { EnvelopeCellValue } from '#components/budget/envelope/EnvelopeBudgetComponents';
+import {
+  EnvelopeCellValue,
+  useEnvelopeSheetValue,
+} from '#components/budget/envelope/EnvelopeBudgetComponents';
+import { FinancialText } from '#components/FinancialText';
+import { PrivacyFilter } from '#components/PrivacyFilter';
 import { CellValueText } from '#components/spreadsheet/CellValue';
 import { useFormat } from '#hooks/useFormat';
 import type { FormatType } from '#hooks/useFormat';
@@ -48,6 +53,9 @@ type TotalsListProps = {
 
 export function TotalsList({ prevMonthName, style }: TotalsListProps) {
   const format = useFormat();
+  const totalIncome = useEnvelopeSheetValue(envelopeBudget.totalIncome) ?? 0;
+  const totalSpent = useEnvelopeSheetValue(envelopeBudget.totalSpent) ?? 0;
+  const remaining = totalIncome + totalSpent;
   const signedFormatter = makeSignedFormatter(format);
   const invertedSignedFormatter = makeSignedFormatter(format, true);
   return (
@@ -139,6 +147,9 @@ export function TotalsList({ prevMonthName, style }: TotalsListProps) {
             />
           )}
         </EnvelopeCellValue>
+        <PrivacyFilter>
+          <FinancialText>{format(remaining, 'financial')}</FinancialText>
+        </PrivacyFilter>
       </View>
 
       <View>
@@ -156,6 +167,9 @@ export function TotalsList({ prevMonthName, style }: TotalsListProps) {
 
         <Block>
           <Trans>For next month</Trans>
+        </Block>
+        <Block>
+          <Trans>Remaining</Trans>
         </Block>
       </View>
     </View>
