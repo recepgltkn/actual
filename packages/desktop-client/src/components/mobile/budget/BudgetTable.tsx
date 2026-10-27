@@ -242,6 +242,7 @@ function Saved({ projected, onPress, show3Columns }: SavedProps) {
 type BudgetGroupsProps = {
   type: string;
   categoryGroups: CategoryGroupEntity[];
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   onEditCategoryGroup: (id: CategoryGroupEntity['id']) => void;
   onEditCategory: (id: CategoryEntity['id']) => void;
   month: string;
@@ -253,6 +254,7 @@ type BudgetGroupsProps = {
 
 function BudgetGroups({
   categoryGroups,
+  onShowGroupActivity,
   onEditCategoryGroup,
   onEditCategory,
   month,
@@ -302,6 +304,7 @@ function BudgetGroups({
         showBudgetedColumn={showBudgetedColumn}
         month={month}
         onEditCategoryGroup={onEditCategoryGroup}
+        onShowGroupActivity={onShowGroupActivity}
         onEditCategory={onEditCategory}
         onBudgetAction={onBudgetAction}
         show3Columns={show3Columns}
@@ -329,6 +332,7 @@ function BudgetGroups({
 type BudgetTableProps = {
   categoryGroups: CategoryGroupEntity[];
   month: string;
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   onShowBudgetSummary: () => void;
   onBudgetAction: (month: string, action: string, args: unknown) => void;
   onRefresh: () => Promise<void>;
@@ -339,6 +343,7 @@ type BudgetTableProps = {
 export function BudgetTable({
   categoryGroups,
   month,
+  onShowGroupActivity,
   onShowBudgetSummary,
   onBudgetAction,
   onRefresh,
@@ -388,6 +393,7 @@ export function BudgetTable({
             <BudgetGroups
               type={budgetType}
               categoryGroups={categoryGroups}
+              onShowGroupActivity={onShowGroupActivity}
               showBudgetedColumn={!showSpentColumn}
               show3Columns={show3Columns}
               showHiddenCategories={showHiddenCategories}

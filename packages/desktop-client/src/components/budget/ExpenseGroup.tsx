@@ -41,6 +41,9 @@ type ExpenseGroupProps = {
   onReorderGroup: OnDropCallback;
   onReorderCategory: OnDropCallback;
   onToggleCollapse?: ComponentProps<typeof SidebarGroup>['onToggleCollapse'];
+  onShowGroupActivity?: ComponentProps<
+    typeof SidebarGroup
+  >['onShowGroupActivity'];
   onShowNewCategory?: ComponentProps<typeof SidebarGroup>['onShowNewCategory'];
 };
 
@@ -58,6 +61,7 @@ export function ExpenseGroup({
   onReorderGroup,
   onReorderCategory,
   onToggleCollapse,
+  onShowGroupActivity,
   onShowNewCategory,
 }: ExpenseGroupProps) {
   const dragging = dragState && dragState.item === group;
@@ -136,6 +140,7 @@ export function ExpenseGroup({
           dragPreview={dragging && dragState.preview}
           collapsed={collapsed}
           onToggleCollapse={onToggleCollapse}
+          onShowGroupActivity={onShowGroupActivity}
           onEdit={onEditName}
           onSave={onSave}
           onDelete={onDelete}
@@ -144,7 +149,13 @@ export function ExpenseGroup({
           onShowNewCategory={onShowNewCategory}
         />
         <RenderMonths>
-          {({ month }) => <MonthComponent month={month} group={group} />}
+          {({ month }) => (
+            <MonthComponent
+              month={month}
+              group={group}
+              onShowGroupActivity={onShowGroupActivity}
+            />
+          )}
         </RenderMonths>
       </View>
     </Row>

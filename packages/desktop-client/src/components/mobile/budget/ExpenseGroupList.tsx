@@ -18,6 +18,7 @@ import {
 
 type ExpenseGroupListProps = {
   categoryGroups: CategoryGroupEntity[];
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   show3Columns: boolean;
   showBudgetedColumn: boolean;
   month: string;
@@ -31,6 +32,7 @@ type ExpenseGroupListProps = {
 
 export function ExpenseGroupList({
   categoryGroups,
+  onShowGroupActivity,
   show3Columns,
   showBudgetedColumn,
   month,
@@ -84,6 +86,7 @@ export function ExpenseGroupList({
           onEditCategoryGroup={() => {}}
           isCollapsed={() => true}
           onToggleCollapse={() => {}}
+          onShowGroupActivity={() => {}}
           isHidden={false}
         />
       );
@@ -146,6 +149,7 @@ export function ExpenseGroupList({
         showHiddenCategories,
         isCollapsed,
         onToggleCollapse,
+        onShowGroupActivity,
       ]}
       dragAndDropHooks={dragAndDropHooks}
     >
@@ -162,6 +166,7 @@ export function ExpenseGroupList({
           showHiddenCategories={showHiddenCategories}
           isCollapsed={isCollapsed}
           onToggleCollapse={onToggleCollapse}
+          onShowGroupActivity={onShowGroupActivity}
           isHidden={!!categoryGroup.hidden}
         />
       )}

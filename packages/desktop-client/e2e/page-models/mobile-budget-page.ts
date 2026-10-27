@@ -151,10 +151,23 @@ export class MobileBudgetPage {
   }
 
   async #getButtonForCategoryGroup(categoryGroupName: string | RegExp) {
-    return this.categoryGroupRows.getByRole('button', {
-      name: categoryGroupName,
-      exact: true,
-    });
+    return this.categoryGroupRows
+      .filter({ hasText: categoryGroupName })
+      .getByRole('button', { name: 'Edit', exact: true });
+  }
+
+  async openCategoryGroupActivity(categoryGroupName: string | RegExp) {
+    await this.categoryGroupRows
+      .filter({ hasText: categoryGroupName })
+      .getByTestId('category-group-name')
+      .click();
+  }
+
+  async openCategoryGroupActivityFromSpent(categoryGroupName: string | RegExp) {
+    await this.categoryGroupRows
+      .filter({ hasText: categoryGroupName })
+      .getByTestId('category-group-spent')
+      .click();
   }
 
   async openCategoryGroupMenu(categoryGroupName: string | RegExp) {

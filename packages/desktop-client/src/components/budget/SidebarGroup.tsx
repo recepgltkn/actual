@@ -43,6 +43,7 @@ type SidebarGroupProps = {
   onShowNewCategory?: (groupId: CategoryGroupEntity['id']) => void;
   onHideNewGroup?: () => void;
   onToggleCollapse?: (id: CategoryGroupEntity['id']) => void;
+  onShowGroupActivity?: (id: CategoryGroupEntity['id']) => void;
 };
 
 export function SidebarGroup({
@@ -60,6 +61,7 @@ export function SidebarGroup({
   onShowNewCategory,
   onHideNewGroup,
   onToggleCollapse,
+  onShowGroupActivity,
 }: SidebarGroupProps) {
   const { t } = useTranslation();
   const isGoalTemplatesEnabled = useFeatureFlag('goalTemplatesEnabled');
@@ -122,8 +124,10 @@ export function SidebarGroup({
         height: 20,
       }}
       ref={triggerRef}
-      onClick={() => {
-        onToggleCollapse(group.id);
+      onClick={event => {
+        if (event.target === event.currentTarget) {
+          onToggleCollapse?.(group.id);
+        }
       }}
     >
       {!dragPreview && (
@@ -148,7 +152,27 @@ export function SidebarGroup({
         }}
       >
         {dragPreview && <Text style={{ fontWeight: 500 }}>Group: </Text>}
-        {group.name}
+        {onShowGroupActivity && !dragPreview ? (
+          <Button
+            variant="bare"
+            onPress={() => onShowGroupActivity(group.id)}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: 0,
+              overflow: 'hidden',
+              color: 'inherit',
+              textAlign: 'left',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              fontWeight: 'inherit',
+            }}
+          >
+            {group.name}
+          </Button>
+        ) : (
+          group.name
+        )}
       </div>
       {!dragPreview && (
         <>

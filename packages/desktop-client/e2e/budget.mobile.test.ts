@@ -274,7 +274,7 @@ budgetTypes.forEach(budgetType => {
 
     // Category / Category Group Menu Tests
 
-    test('checks that clicking the category group name opens the category group menu modal', async () => {
+    test('checks that the category group edit button opens the menu modal', async () => {
       const budgetPage = await navigation.goToBudgetPage();
 
       const categoryGroupName = await budgetPage.getCategoryGroupNameForRow(0);
@@ -285,6 +285,26 @@ budgetTypes.forEach(budgetType => {
         categoryGroupName,
       );
       await expect(page).toMatchThemeScreenshots();
+    });
+
+    test('clicking the category group name opens its filtered activity', async () => {
+      const budgetPage = await navigation.goToBudgetPage();
+      const categoryGroupName = await budgetPage.getCategoryGroupNameForRow(0);
+
+      await budgetPage.openCategoryGroupActivity(categoryGroupName);
+
+      await expect(page).toHaveURL(/\/accounts\/all$/);
+      await expect(page.getByLabel('Transaction list')).toBeVisible();
+    });
+
+    test('clicking the category group spent total opens its filtered activity', async () => {
+      const budgetPage = await navigation.goToBudgetPage();
+      const categoryGroupName = await budgetPage.getCategoryGroupNameForRow(0);
+
+      await budgetPage.openCategoryGroupActivityFromSpent(categoryGroupName);
+
+      await expect(page).toHaveURL(/\/accounts\/all$/);
+      await expect(page.getByLabel('Transaction list')).toBeVisible();
     });
 
     test('checks that clicking the category name opens the category menu modal', async () => {

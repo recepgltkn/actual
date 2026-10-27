@@ -29,6 +29,7 @@ import { View } from '@actual-app/components/view';
 import { send } from '@actual-app/core/platform/client/connection';
 import * as monthUtils from '@actual-app/core/shared/months';
 import { groupById } from '@actual-app/core/shared/util';
+import type { CategoryGroupEntity } from '@actual-app/core/types/models';
 import type { TransObjectLiteral } from '@actual-app/core/types/util';
 
 import { sync } from '#app/appSlice';
@@ -99,6 +100,7 @@ export function BudgetPage() {
   const numberFormat = _numberFormat || 'comma-dot';
   const [hideFraction] = useSyncedPref('hideFraction');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const applyBudgetAction = useBudgetActions();
   const createCategory = useCreateCategoryMutation();
   const saveCategory = useSaveCategoryMutation();
@@ -126,6 +128,20 @@ export function BudgetPage() {
       applyBudgetAction.mutate({ month, type, args });
     },
     [applyBudgetAction],
+  );
+
+  const onShowGroupActivity = useCallback(
+    (groupId: CategoryGroupEntity['id']) => {
+      void navigate('/accounts', {
+        state: {
+          goBack: true,
+          filterConditions: [
+            { field: 'category_group', op: 'is', value: groupId, type: 'id' },
+          ],
+        },
+      });
+    },
+    [navigate],
   );
 
   const onShowBudgetSummary = useCallback(() => {
@@ -621,6 +637,7 @@ export function BudgetPage() {
                 onRefresh={onRefresh}
                 onEditCategoryGroup={onOpenCategoryGroupMenuModal}
                 onEditCategory={onOpenCategoryMenuModal}
+                onShowGroupActivity={onShowGroupActivity}
               />
             </>
           )}

@@ -124,4 +124,27 @@ describe('SidebarGroup context menu', () => {
       'delete',
     ]);
   });
+
+  it('opens group activity when the group name is clicked', async () => {
+    const onShowGroupActivity = vi.fn();
+    const onToggleCollapse = vi.fn();
+
+    await renderRow(
+      <SidebarGroup
+        group={group}
+        editing={false}
+        collapsed={false}
+        onEdit={vi.fn()}
+        onSave={vi.fn()}
+        onDelete={vi.fn()}
+        onToggleCollapse={onToggleCollapse}
+        onShowGroupActivity={onShowGroupActivity}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Usual Expenses' }));
+
+    expect(onShowGroupActivity).toHaveBeenCalledWith(group.id);
+    expect(onToggleCollapse).not.toHaveBeenCalled();
+  });
 });

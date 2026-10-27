@@ -141,6 +141,7 @@ export function IncomeHeaderMonth() {
 export const ExpenseGroupMonth = memo(function ExpenseGroupMonth({
   month,
   group,
+  onShowGroupActivity,
 }: CategoryGroupMonthProps) {
   const { id } = group;
 
@@ -168,7 +169,30 @@ export const ExpenseGroupMonth = memo(function ExpenseGroupMonth({
         name="spent"
         width="flex"
         textAlign="right"
-        style={{ fontWeight: 600, ...styles.tnum }}
+        style={{
+          fontWeight: 600,
+          cursor: onShowGroupActivity ? 'pointer' : undefined,
+          ...styles.tnum,
+        }}
+        unexposedContent={({ value, formatter }) => (
+          <Button
+            variant="bare"
+            aria-label={group.name}
+            onPress={() => onShowGroupActivity?.(id)}
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              padding: '0 5px',
+              backgroundColor: 'transparent',
+              borderRadius: 'unset',
+              color: 'inherit',
+              fontWeight: 600,
+              ...styles.tnum,
+            }}
+          >
+            {formatter(value)}
+          </Button>
+        )}
         valueProps={{
           binding: envelopeBudget.groupSumAmount(id),
           type: 'financial',

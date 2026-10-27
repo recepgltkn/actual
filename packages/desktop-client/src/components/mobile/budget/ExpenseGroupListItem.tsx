@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import type { ComponentPropsWithoutRef } from 'react';
 import { GridListItem } from 'react-aria-components';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@actual-app/components/button';
 import { Card } from '@actual-app/components/card';
@@ -32,6 +33,7 @@ type ExpenseGroupListItemProps = ComponentPropsWithoutRef<
   typeof GridListItem<CategoryGroupEntity>
 > & {
   month: string;
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   showHiddenCategories: boolean;
   onEditCategoryGroup: (id: CategoryGroupEntity['id']) => void;
   onEditCategory: (id: string) => void;
@@ -47,6 +49,7 @@ export function ExpenseGroupListItem({
   onEditCategoryGroup,
   onEditCategory,
   month,
+  onShowGroupActivity,
   onBudgetAction,
   showBudgetedColumn,
   show3Columns,
@@ -92,6 +95,7 @@ export function ExpenseGroupListItem({
           month={month}
           showBudgetedColumn={showBudgetedColumn}
           show3Columns={show3Columns}
+          onShowGroupActivity={onShowGroupActivity}
           onEditCategoryGroup={onEditCategoryGroup}
           isCollapsed={isCollapsed}
           onToggleCollapse={onToggleCollapse}
@@ -116,6 +120,7 @@ export function ExpenseGroupListItem({
 type ExpenseGroupHeaderProps = {
   categoryGroup: CategoryGroupEntity;
   month: string;
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   onEditCategoryGroup: (id: CategoryGroupEntity['id']) => void;
   isCollapsed: (id: CategoryGroupEntity['id']) => boolean;
   onToggleCollapse: (id: CategoryGroupEntity['id']) => void;
@@ -127,6 +132,7 @@ type ExpenseGroupHeaderProps = {
 export function ExpenseGroupHeader({
   categoryGroup,
   month,
+  onShowGroupActivity,
   onEditCategoryGroup,
   show3Columns,
   showBudgetedColumn,
@@ -137,7 +143,11 @@ export function ExpenseGroupHeader({
   return (
     <View
       data-testid="category-group-row"
-      onClick={() => onToggleCollapse(categoryGroup.id)}
+      onClick={event => {
+        if (event.target === event.currentTarget) {
+          onToggleCollapse(categoryGroup.id);
+        }
+      }}
       style={{
         cursor: 'pointer',
         height: ROW_HEIGHT,
@@ -155,6 +165,7 @@ export function ExpenseGroupHeader({
     >
       <ExpenseGroupName
         group={categoryGroup}
+        onShowGroupActivity={onShowGroupActivity}
         onEditCategoryGroup={onEditCategoryGroup}
         isCollapsed={isCollapsed}
         onToggleCollapse={onToggleCollapse}
@@ -162,6 +173,7 @@ export function ExpenseGroupHeader({
       />
       <ExpenseGroupCells
         group={categoryGroup}
+        onShowGroupActivity={onShowGroupActivity}
         show3Columns={show3Columns}
         showBudgetedColumn={showBudgetedColumn}
       />
@@ -171,6 +183,7 @@ export function ExpenseGroupHeader({
 
 type ExpenseGroupNameProps = {
   group: CategoryGroupEntity;
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   onEditCategoryGroup: (id: CategoryGroupEntity['id']) => void;
   isCollapsed: (id: CategoryGroupEntity['id']) => boolean;
   onToggleCollapse: (id: CategoryGroupEntity['id']) => void;
@@ -179,11 +192,13 @@ type ExpenseGroupNameProps = {
 
 function ExpenseGroupName({
   group,
+  onShowGroupActivity,
   onEditCategoryGroup,
   isCollapsed,
   onToggleCollapse,
   show3Columns,
 }: ExpenseGroupNameProps) {
+  const { t } = useTranslation();
   const sidebarColumnWidth = getColumnWidth({
     show3Columns,
     isSidebar: true,
@@ -219,6 +234,7 @@ function ExpenseGroupName({
           },
           marginLeft: -5,
         })}
+        style={{ width: 14, minWidth: 14, padding: 0 }}
         onPress={() => onToggleCollapse(group.id)}
       >
         <SvgExpandArrow
@@ -234,35 +250,37 @@ function ExpenseGroupName({
       <Button
         variant="bare"
         style={{
-          maxWidth: sidebarColumnWidth,
+          flex: 1,
+          minWidth: 0,
+          padding: 0,
         }}
+        onPress={() => onShowGroupActivity(group.id)}
+      >
+        <Text
+          style={{
+            ...styles.lineClamp(2),
+            width: '100%',
+            minWidth: 0,
+            textAlign: 'left',
+            ...styles.smallText,
+            fontWeight: '500',
+          }}
+          data-testid="category-group-name"
+        >
+          {group.name}
+        </Text>
+      </Button>
+      <Button
+        variant="bare"
+        aria-label={t('Edit')}
+        style={{ width: 14, minWidth: 14, padding: 0, flexShrink: 0 }}
         onPress={() => onEditCategoryGroup(group.id)}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-          }}
-        >
-          <Text
-            style={{
-              ...styles.lineClamp(2),
-              width: sidebarColumnWidth,
-              textAlign: 'left',
-              ...styles.smallText,
-              fontWeight: '500',
-            }}
-            data-testid="category-group-name"
-          >
-            {group.name}
-          </Text>
-          <SvgCheveronRight
-            style={{ flexShrink: 0, color: theme.tableTextSubdued }}
-            width={14}
-            height={14}
-          />
-        </View>
+        <SvgCheveronRight
+          style={{ flexShrink: 0, color: theme.tableTextSubdued }}
+          width={14}
+          height={14}
+        />
       </Button>
     </View>
   );
@@ -270,12 +288,14 @@ function ExpenseGroupName({
 
 type ExpenseGroupCellsProps = {
   group: CategoryGroupEntity;
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   show3Columns: boolean;
   showBudgetedColumn: boolean;
 };
 
 function ExpenseGroupCells({
   group,
+  onShowGroupActivity,
   show3Columns,
   showBudgetedColumn,
 }: ExpenseGroupCellsProps) {
@@ -354,7 +374,18 @@ function ExpenseGroupCells({
           type="financial"
         >
           {({ type, value }) => (
-            <View>
+            <Button
+              variant="bare"
+              data-testid="category-group-spent"
+              onPress={() => onShowGroupActivity(group.id)}
+              style={{
+                display: 'block',
+                width: columnWidth,
+                padding: 0,
+                backgroundColor: 'transparent',
+                borderRadius: 'unset',
+              }}
+            >
               <PrivacyFilter>
                 <AutoTextSize
                   key={value}
@@ -367,7 +398,7 @@ function ExpenseGroupCells({
                   {format(value, type)}
                 </AutoTextSize>
               </PrivacyFilter>
-            </View>
+            </Button>
           )}
         </CellValue>
       </View>

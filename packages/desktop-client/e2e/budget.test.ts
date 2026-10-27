@@ -66,6 +66,13 @@ test.describe('Budget', () => {
     await page.getByRole('button', { name: 'Back' }).click();
   });
 
+  test('clicking a category group spent total opens its transactions', async () => {
+    const accountPage =
+      await budgetPage.clickOnGroupSpentAmount('Usual Expenses');
+    expect(page.url()).toContain('/accounts');
+    expect(await accountPage.accountName.textContent()).toMatch('All Accounts');
+  });
+
   test('right clicking a category opens context menu', async () => {
     await budgetPage.rightClickCategory(1);
     const menu = page.getByRole('menu');

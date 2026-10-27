@@ -55,6 +55,7 @@ type BudgetTableProps = {
     targetId: CategoryEntity['id'] | null;
   }) => void;
   onShowActivity: (id: CategoryEntity['id'], month?: string) => void;
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   onBudgetAction: (month: string, type: string, args: unknown) => void;
 };
 
@@ -74,6 +75,7 @@ export function BudgetTable(props: BudgetTableProps) {
     onReorderCategory,
     onReorderGroup,
     onShowActivity,
+    onShowGroupActivity,
     onBudgetAction,
   } = props;
 
@@ -325,6 +327,7 @@ export function BudgetTable(props: BudgetTableProps) {
                 onReorderGroup={_onReorderGroup}
                 onBudgetAction={onBudgetAction}
                 onShowActivity={_onShowActivity}
+                onShowGroupActivity={onShowGroupActivity}
                 onApplyBudgetTemplatesInGroup={onApplyBudgetTemplatesInGroup}
                 onSortCategories={onSortCategories}
               />

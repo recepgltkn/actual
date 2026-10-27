@@ -180,6 +180,18 @@ export class BudgetPage {
     return new AccountPage(this.page);
   }
 
+  async clickOnGroupSpentAmount(groupName: string, monthIndex = 0) {
+    await this.budgetTable
+      .getByTestId('row')
+      .filter({ hasText: groupName })
+      .first()
+      .getByTestId('spent')
+      .nth(monthIndex)
+      .getByRole('button', { name: groupName })
+      .click();
+    return new AccountPage(this.page);
+  }
+
   async clickOnSpentAmountForLastVisibleRow() {
     // Click the last spent-amount cell currently visible in the scroll container
     // without triggering Playwright's auto-scroll-into-view, so the scroll

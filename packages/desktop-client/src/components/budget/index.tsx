@@ -150,6 +150,17 @@ export function Budget() {
     });
   };
 
+  const onShowGroupActivity = groupId => {
+    void navigate('/accounts', {
+      state: {
+        goBack: true,
+        filterConditions: [
+          { field: 'category_group', op: 'is', value: groupId, type: 'id' },
+        ],
+      },
+    });
+  };
+
   const saveCategory = useSaveCategoryMutation();
   const onSaveCategory = category => {
     saveCategory.mutate({ category });
@@ -200,6 +211,7 @@ export function Budget() {
           onSaveGroup={onSaveCategoryGroup}
           onBudgetAction={onBudgetAction}
           onShowActivity={onShowActivity}
+          onShowGroupActivity={onShowGroupActivity}
           onReorderCategory={reorderCategory.mutate}
           onReorderGroup={reorderCategoryGroup.mutate}
           onApplyBudgetTemplatesInGroup={onApplyBudgetTemplatesInGroup}
@@ -229,6 +241,7 @@ export function Budget() {
           onSaveGroup={onSaveCategoryGroup}
           onBudgetAction={onBudgetAction}
           onShowActivity={onShowActivity}
+          onShowGroupActivity={onShowGroupActivity}
           onReorderCategory={reorderCategory.mutate}
           onReorderGroup={reorderCategoryGroup.mutate}
           onApplyBudgetTemplatesInGroup={onApplyBudgetTemplatesInGroup}
@@ -279,6 +292,7 @@ export type CategoryMonthProps = {
 export type CategoryGroupMonthProps = {
   month: string;
   group: CategoryGroupEntity;
+  onShowGroupActivity?: (id: CategoryGroupEntity['id']) => void;
 };
 
 export type BudgetComponents = {

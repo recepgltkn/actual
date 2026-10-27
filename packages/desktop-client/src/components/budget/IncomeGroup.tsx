@@ -22,6 +22,7 @@ type IncomeGroupProps = {
     direction: 'asc' | 'desc',
   ) => void;
   onToggleCollapse: (id: CategoryGroupEntity['id']) => void;
+  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
   onShowNewCategory: (groupId: CategoryGroupEntity['id']) => void;
 };
 
@@ -33,6 +34,7 @@ export function IncomeGroup({
   onSave,
   onSortCategories,
   onToggleCollapse,
+  onShowGroupActivity,
   onShowNewCategory,
 }: IncomeGroupProps) {
   const { IncomeGroupComponent: MonthComponent } = useBudgetComponents();
@@ -56,6 +58,7 @@ export function IncomeGroup({
         onSave={onSave}
         onSortCategories={onSortCategories}
         onToggleCollapse={onToggleCollapse}
+        onShowGroupActivity={onShowGroupActivity}
         onShowNewCategory={onShowNewCategory}
       />
       <RenderMonths>
