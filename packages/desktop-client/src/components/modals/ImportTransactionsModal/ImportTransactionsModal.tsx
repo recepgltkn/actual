@@ -31,6 +31,10 @@ import {
   useImportPreviewTransactionsMutation,
   useImportTransactionsMutation,
 } from '#accounts';
+import {
+  useCreateCategoryGroupMutation,
+  useCreateCategoryMutation,
+} from '#budget';
 import { Modal, ModalCloseButton, ModalHeader } from '#components/common/Modal';
 import { SectionLabel } from '#components/forms';
 import { LabeledCheckbox } from '#components/forms/LabeledCheckbox';
@@ -211,7 +215,12 @@ export function ImportTransactionsModal({
   const queryClient = useQueryClient();
   const dateFormat = useDateFormat() || ('MM/dd/yyyy' as const);
   const [prefs, savePrefs] = useSyncedPrefs();
-  const { data: { list: categories } = { list: [] } } = useCategories();
+  const {
+    data: { list: categories, grouped: categoryGroups } = {
+      list: [],
+      grouped: [],
+    },
+  } = useCategories();
 
   const [multiplierAmount, setMultiplierAmount] = useState('');
   const [loadingState, setLoadingState] = useState<
@@ -227,6 +236,8 @@ export function ImportTransactionsModal({
     ImportTransaction[]
   >([]);
   const [filetype, setFileType] = useState('unknown');
+  const [statementCards, setStatementCards] = useState<string[]>([]);
+  const [statementCard, setStatementCard] = useState('');
   const [fieldMappings, setFieldMappings] = useState<FieldMapping | null>(null);
   const [splitMode, setSplitMode] = useState(false);
   const [flipAmount, setFlipAmount] = useState(false);
@@ -284,6 +295,7 @@ export function ImportTransactionsModal({
   const [clearOnImport, setClearOnImport] = useState(true);
   const [startDate, setStartDate] = useState('');
   const lastParseRef = useRef<LastParse | null>(null);
+  const statementCardRef = useRef('');
 
   const getImportPreview = useCallback(
     async (
@@ -298,9 +310,10 @@ export function ImportTransactionsModal({
       multiplierAmount: string,
     ) => {
       const previewTransactions = [];
-      const inOutModeEnabled = isOfxFile(filetype) ? false : inOutMode;
+      const inOutModeEnabled =
+        isOfxFile(filetype) || isExcelFile(filetype) ? false : inOutMode;
       const getTransDate: (trans: ImportTransaction) => string | null =
-        isOfxFile(filetype)
+        isOfxFile(filetype) || isExcelFile(filetype)
           ? trans => trans.date ?? null
           : trans => parseDate(trans.date, parseDateFormat);
 
@@ -385,16 +398,22 @@ export function ImportTransactionsModal({
       setLoadingState('parsing');
 
       const filetype = getFileType(filename);
+      statementCardRef.current = options.statementCard || '';
       setFilename(filename);
       setFileType(filetype);
 
-      const { errors, transactions: parsedTransactions = [] } = await send(
-        'transactions-parse-file',
-        {
-          filepath: filename,
-          options,
-        },
-      );
+      const {
+        errors,
+        transactions: parsedTransactions = [],
+        statementCards = [],
+      } = await send('transactions-parse-file', {
+        filepath: filename,
+        options,
+      });
+      setStatementCards(statementCards);
+      setStatementCard(options.statementCard || statementCards[0] || '');
+      statementCardRef.current =
+        options.statementCard || statementCards[0] || '';
 
       let index = 0;
       const transactions = parsedTransactions.map(trans => {
@@ -459,6 +478,7 @@ export function ImportTransactionsModal({
         } else {
           setFieldMappings(null);
           setParseDateFormat(null);
+          if (isExcelFile(filetype)) setInOutMode(false);
         }
 
         setParsedTransactions(transactions as ImportTransaction[]);
@@ -487,6 +507,9 @@ export function ImportTransactionsModal({
       skipEndLines,
       fallbackMissingPayeeToMemo,
       importNotes,
+      statementCard: isExcelFile(fileType)
+        ? statementCardRef.current
+        : undefined,
       swapPayeeAndMemo: getSwapOption(
         fileType,
         ofxSwapPayeeAndMemo,
@@ -557,11 +580,12 @@ export function ImportTransactionsModal({
       filters: [
         {
           name: 'Financial Files',
-          extensions: ['qif', 'ofx', 'qfx', 'csv', 'tsv', 'xml'],
+          extensions: ['qif', 'ofx', 'qfx', 'csv', 'tsv', 'xml', 'xls', 'xlsx'],
         },
       ],
     });
 
+    if (!res?.[0]) return;
     const fileType = getFileType(res[0]);
     const parseOptions = getParseOptions(fileType, {
       delimiter,
@@ -633,12 +657,63 @@ export function ImportTransactionsModal({
   }
 
   const importTransactions = useImportTransactionsMutation();
+  const createCategoryGroup = useCreateCategoryGroupMutation();
+  const createCategory = useCreateCategoryMutation();
 
   async function onImport(close) {
     setLoadingState('importing');
 
     const finalTransactions = [];
     let errorMessage;
+    const categoryIdsByName = new Map(
+      categories.map(category => [category.name.trim(), category.id]),
+    );
+
+    if (isExcelFile(filetype)) {
+      const missingCategories = [
+        ...new Set(
+          transactions
+            .filter(
+              trans =>
+                !trans.isMatchedTransaction &&
+                (!reconcile || trans.selected || trans.ignored),
+            )
+            .map(trans => trans.category?.trim())
+            .filter(name => name && !categoryIdsByName.has(name)),
+        ),
+      ];
+
+      try {
+        if (missingCategories.length > 0) {
+          const groupName = t('Statement categories');
+          let groupId = categoryGroups.find(
+            group => group.name === groupName,
+          )?.id;
+          groupId ||= await createCategoryGroup.mutateAsync({
+            name: groupName,
+          });
+
+          for (const name of missingCategories) {
+            const id = await createCategory.mutateAsync({
+              name,
+              groupId,
+              isIncome: false,
+              isHidden: false,
+            });
+            categoryIdsByName.set(name, id);
+          }
+        }
+      } catch {
+        setError({
+          parsed: false,
+          message: t(
+            'Could not create statement categories. Please try again.',
+          ),
+        });
+        setLoadingState(null);
+        return;
+      }
+    }
 
     for (let trans of transactions) {
       if (
@@ -654,7 +729,7 @@ export function ImportTransactionsModal({
       trans = fieldMappings ? applyFieldMappings(trans, fieldMappings) : trans;
 
       const date =
-        isOfxFile(filetype) || isCamtFile(filetype)
+        isOfxFile(filetype) || isCamtFile(filetype) || isExcelFile(filetype)
           ? trans.date
           : parseDate(trans.date, parseDateFormat);
       if (date == null) {
@@ -668,7 +743,7 @@ export function ImportTransactionsModal({
       const { amount } = parseAmountFields(
         trans,
         splitMode,
-        isOfxFile(filetype) ? false : inOutMode,
+        isOfxFile(filetype) || isExcelFile(filetype) ? false : inOutMode,
         outValue,
         flipAmount,
         multiplierAmount,
@@ -680,7 +755,9 @@ export function ImportTransactionsModal({
         break;
       }
 
-      const category_id = parseCategoryFields(trans, categories);
+      const category_id = isExcelFile(filetype)
+        ? (categoryIdsByName.get(trans.category?.trim()) ?? null)
+        : parseCategoryFields(trans, categories);
 
       const {
         inflow: _inflow,
@@ -721,7 +798,11 @@ export function ImportTransactionsModal({
       return;
     }
 
-    if (!isOfxFile(filetype) && !isCamtFile(filetype)) {
+    if (
+      !isOfxFile(filetype) &&
+      !isCamtFile(filetype) &&
+      !isExcelFile(filetype)
+    ) {
       const key = `parse-date-${accountId}-${filetype}`;
       savePrefs({ [key]: parseDateFormat });
     }
@@ -800,7 +881,8 @@ export function ImportTransactionsModal({
 
   const onImportPreview = useEffectEvent(async () => {
     // Filter by start date before preview and deduplication
-    const isPreParsed = isOfxFile(filetype) || isCamtFile(filetype);
+    const isPreParsed =
+      isOfxFile(filetype) || isCamtFile(filetype) || isExcelFile(filetype);
     const filteredTransactions = filterByStartDate(
       parsedTransactions,
       startDate,
@@ -907,7 +989,7 @@ export function ImportTransactionsModal({
   if (reconcile) {
     headers.unshift({ name: ' ', width: 31 });
   }
-  if (inOutMode) {
+  if (inOutMode && filetype === 'csv') {
     headers.push({
       name: t('In/Out'),
       width: 90,
@@ -948,6 +1030,36 @@ export function ImportTransactionsModal({
             }
             rightContent={<ModalCloseButton onPress={() => state.close()} />}
           />
+          {isExcelFile(filetype) && statementCards.length > 0 && (
+            <View style={{ marginBottom: 10, gap: 5 }}>
+              <label htmlFor="statement-card-select">
+                <Trans>Card in statement</Trans>
+              </label>
+              <Select
+                id="statement-card-select"
+                options={statementCards.map(card => [
+                  card,
+                  t('Card ending in {{card}}', { card }),
+                ])}
+                value={statementCard}
+                onChange={card => {
+                  void parse(filename, { statementCard: card, importNotes });
+                }}
+                style={{ width: 220 }}
+              />
+              <Text style={{ color: theme.tableHeaderText }}>
+                <Trans>
+                  Only transactions for the selected card will be imported into
+                  this account.
+                </Trans>
+              </Text>
+              <Text style={{ color: theme.tableHeaderText }}>
+                <Trans>
+                  Missing statement categories will be created when you import.
+                </Trans>
+              </Text>
+            </View>
+          )}
           {error && !error.parsed && (
             <View style={{ alignItems: 'center', marginBottom: 15 }}>
               <Text style={{ marginRight: 10, color: theme.errorText }}>
@@ -1003,6 +1115,7 @@ export function ImportTransactionsModal({
                       flipAmount={flipAmount}
                       multiplierAmount={multiplierAmount}
                       categories={categories}
+                      showUnmatchedCategory={isExcelFile(filetype)}
                       onCheckTransaction={onCheckTransaction}
                       reconcile={reconcile}
                     />
@@ -1390,6 +1503,10 @@ export function ImportTransactionsModal({
 }
 
 function getParseOptions(fileType: string, options: ParseFileOptions = {}) {
+  if (isExcelFile(fileType)) {
+    const { importNotes, statementCard } = options;
+    return { importNotes, statementCard };
+  }
   if (fileType === 'csv') {
     const { delimiter, encoding, hasHeaderRow, skipStartLines, skipEndLines } =
       options;
@@ -1439,4 +1556,8 @@ function isOfxFile(fileType: string) {
 
 function isCamtFile(fileType: string) {
   return fileType === 'xml';
+}
+
+function isExcelFile(fileType: string) {
+  return fileType === 'xls' || fileType === 'xlsx';
 }

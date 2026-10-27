@@ -1,5 +1,6 @@
 // @ts-strict-ignore
 import { parse as csv2json } from 'csv-parse/sync';
+import * as XLSX from 'xlsx';
 
 import * as fs from '#platform/server/fs';
 import { logger } from '#platform/server/log';
@@ -50,6 +51,7 @@ type StructuredTransaction = {
   date: string;
   payee_name: string;
   imported_payee: string;
+  imported_id?: string;
   notes: string;
   category?: string | null;
 };
@@ -88,6 +90,7 @@ type ParseError = { message: string; internal: string };
 export type ParseFileResult = {
   errors: ParseError[];
   transactions?: Transaction[];
+  statementCards?: string[];
 };
 
 export type ParseFileOptions = {
@@ -99,6 +102,7 @@ export type ParseFileOptions = {
   skipEndLines?: number;
   importNotes?: boolean;
   encoding?: string;
+  statementCard?: string;
 };
 
 export async function parseFile(
@@ -117,6 +121,9 @@ export async function parseFile(
       case '.csv':
       case '.tsv':
         return parseCSV(filepath, options);
+      case '.xls':
+      case '.xlsx':
+        return parseExcelStatement(filepath, options);
       case '.ofx':
       case '.qfx':
         return parseOFX(filepath, options);
@@ -131,6 +138,120 @@ export async function parseFile(
     internal: '',
   });
   return { errors, transactions: [] };
+}
+
+async function parseExcelStatement(
+  filepath: string,
+  options: ParseFileOptions,
+): Promise<ParseFileResult> {
+  try {
+    const bytes = await fs.readFile(filepath, 'binary');
+    const workbook = XLSX.read(bytes, { type: 'array' });
+    const transactionsByCard = new Map<string, StructuredTransaction[]>();
+    const occurrencesByIdentity = new Map<string, number>();
+
+    for (const sheetName of workbook.SheetNames) {
+      const rows = XLSX.utils.sheet_to_json<string[]>(
+        workbook.Sheets[sheetName],
+        {
+          header: 1,
+          raw: false,
+          defval: '',
+        },
+      );
+      let card: string | null = null;
+      let maskedCardNumber = '';
+      let hasHeader = false;
+
+      for (const row of rows) {
+        const first = String(row[0] ?? '').trim();
+        const cardMatch = first.match(/\b\d{4}\s+\*{4}\s+\*{4}\s+(\d{4})\b/);
+        if (cardMatch) {
+          card = cardMatch[1];
+          maskedCardNumber = cardMatch[0];
+          hasHeader = false;
+          if (!transactionsByCard.has(card)) transactionsByCard.set(card, []);
+          continue;
+        }
+
+        if (
+          first === 'Tarih' &&
+          String(row[1] ?? '').trim() === 'İşlem' &&
+          String(row[4] ?? '').trim() === 'Tutar(TL)'
+        ) {
+          hasHeader = true;
+          continue;
+        }
+
+        if (!card || !hasHeader || !/^\d{2}\/\d{2}\/\d{4}$/.test(first)) {
+          continue;
+        }
+
+        const amountText = String(row[4] ?? '').trim();
+        // Some statement rows only adjust bonus points and have no money movement.
+        if (!amountText) continue;
+        if (!/^-?(?:\d{1,3}(?:\.\d{3})*|\d+),\d{2}$/.test(amountText)) {
+          throw new Error('Invalid transaction amount');
+        }
+        const amount = Number(amountText.replace(/\./g, '').replace(',', '.'));
+        const [, day, month, year] =
+          first.match(/^(\d{2})\/(\d{2})\/(\d{4})$/) || [];
+        const date = `${year}-${month}-${day}`;
+        if (new Date(`${date}T00:00:00Z`).toISOString().slice(0, 10) !== date) {
+          throw new Error('Invalid transaction date');
+        }
+        const payee = String(row[1] ?? '').trim();
+        if (!payee) throw new Error('Missing transaction description');
+        const identity = JSON.stringify([
+          maskedCardNumber,
+          date,
+          payee,
+          amount,
+        ]);
+        const occurrence = (occurrencesByIdentity.get(identity) ?? 0) + 1;
+        occurrencesByIdentity.set(identity, occurrence);
+
+        transactionsByCard.get(card)?.push({
+          date,
+          amount,
+          payee_name: maskedCardNumber,
+          imported_payee: payee,
+          imported_id: `excel:${identity}:${occurrence}`,
+          notes: payee,
+          category: String(row[2] ?? '').trim() || null,
+        });
+      }
+    }
+
+    const statementCards = [...transactionsByCard.keys()].filter(
+      card => (transactionsByCard.get(card)?.length ?? 0) > 0,
+    );
+    if (statementCards.length === 0) {
+      throw new Error('No transactions found in this statement format');
+    }
+    const selectedCard = options.statementCard || statementCards[0];
+    if (!statementCards.includes(selectedCard)) {
+      throw new Error('Selected card was not found in the statement');
+    }
+
+    return {
+      errors: [],
+      transactions: transactionsByCard.get(selectedCard),
+      statementCards,
+    };
+  } catch (error) {
+    return {
+      errors: [
+        {
+          message:
+            'Failed parsing Excel statement: ' +
+            (error instanceof Error ? error.message : String(error)),
+          internal: String(error),
+        },
+      ],
+      transactions: [],
+    };
+  }
 }
 
 async function parseCSV(

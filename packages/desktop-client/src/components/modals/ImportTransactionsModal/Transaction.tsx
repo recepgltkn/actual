@@ -30,6 +30,7 @@ type TransactionProps = {
   flipAmount: boolean;
   multiplierAmount: string;
   categories: CategoryEntity[];
+  showUnmatchedCategory?: boolean;
   onCheckTransaction: (transactionId: string) => void;
   reconcile: boolean;
   index: number;
@@ -47,6 +48,7 @@ export function Transaction({
   flipAmount,
   multiplierAmount,
   categories,
+  showUnmatchedCategory = false,
   onCheckTransaction,
   reconcile,
   index,
@@ -219,13 +221,15 @@ export function Transaction({
       <Field
         width="flex"
         title={
-          transaction.category && categoryList.includes(transaction.category)
+          transaction.category &&
+          (showUnmatchedCategory || categoryList.includes(transaction.category))
             ? transaction.category
             : undefined
         }
       >
         {transaction.category &&
-          categoryList.includes(transaction.category) &&
+          (showUnmatchedCategory ||
+            categoryList.includes(transaction.category)) &&
           transaction.category}
       </Field>
       {inOutMode && (

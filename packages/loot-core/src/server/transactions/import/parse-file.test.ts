@@ -1,5 +1,10 @@
+import * as nodeFs from 'node:fs';
+import * as os from 'node:os';
+import * as path from 'node:path';
+
 // @ts-strict-ignore
 import * as d from 'date-fns';
+import * as XLSX from 'xlsx';
 
 import { reconcileTransactions } from '#server/accounts/sync';
 import * as db from '#server/db';
@@ -7,6 +12,63 @@ import * as prefs from '#server/prefs';
 import { amountToInteger } from '#shared/util';
 
 import { parseFile } from './parse-file';
+
+it('imports only the selected card from an Excel statement', async () => {
+  const directory = nodeFs.mkdtempSync(
+    path.join(os.tmpdir(), 'actual-statement-'),
+  );
+  const filepath = path.join(directory, 'statement.xls');
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet([
+    ['1234 **** **** 5678 Numaralı Kart TL Ekstre Bilgileri'],
+    ['Tarih', 'İşlem', 'Etiket', 'Bonus', 'Tutar(TL)'],
+    ['27/09/2026', 'MARKET', 'Market', '0,00', '-1.234,56'],
+    ['27/09/2026', 'BONUS ADJUSTMENT', 'Market', '-2,34', ''],
+    [],
+    ['4321 **** **** 8765 Numaralı Kart TL Ekstre Bilgileri'],
+    ['Tarih', 'İşlem', 'Etiket', 'Bonus', 'Tutar(TL)'],
+    ['26/09/2026', 'REFUND', 'Shopping', '0,00', '25,50'],
+  ]);
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Transactions');
+  nodeFs.writeFileSync(
+    filepath,
+    XLSX.write(workbook, { bookType: 'biff8', type: 'buffer' }),
+  );
+
+  try {
+    const firstCard = await parseFile(filepath);
+    expect(firstCard.errors).toEqual([]);
+    expect(firstCard.statementCards).toEqual(['5678', '8765']);
+    expect(firstCard.transactions).toEqual([
+      {
+        date: '2026-09-27',
+        amount: -1234.56,
+        payee_name: '1234 **** **** 5678',
+        imported_payee: 'MARKET',
+        imported_id:
+          'excel:["1234 **** **** 5678","2026-09-27","MARKET",-1234.56]:1',
+        notes: 'MARKET',
+        category: 'Market',
+      },
+    ]);
+
+    const secondCard = await parseFile(filepath, { statementCard: '8765' });
+    expect(secondCard.transactions).toEqual([
+      {
+        date: '2026-09-26',
+        amount: 25.5,
+        payee_name: '4321 **** **** 8765',
+        imported_payee: 'REFUND',
+        imported_id:
+          'excel:["4321 **** **** 8765","2026-09-26","REFUND",25.5]:1',
+        notes: 'REFUND',
+        category: 'Shopping',
+      },
+    ]);
+  } finally {
+    nodeFs.rmSync(directory, { recursive: true, force: true });
+  }
+});
 
 beforeEach(global.emptyDatabase());
 
