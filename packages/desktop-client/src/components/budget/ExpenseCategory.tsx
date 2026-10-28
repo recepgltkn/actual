@@ -1,5 +1,5 @@
 // @ts-strict-ignore
-import React from 'react';
+import React, { useContext } from 'react';
 import type { ComponentProps } from 'react';
 
 import { theme } from '@actual-app/components/theme';
@@ -17,7 +17,10 @@ import type {
 } from '#components/sort';
 import { Row } from '#components/table';
 import { useDragRef } from '#hooks/useDragRef';
+import { useSheetValue } from '#hooks/useSheetValue';
+import { envelopeBudget, trackingBudget } from '#spreadsheet/bindings';
 
+import { MonthsContext } from './MonthsContext';
 import { RenderMonths } from './RenderMonths';
 import { SidebarCategory } from './SidebarCategory';
 
@@ -26,6 +29,7 @@ import { useBudgetComponents } from '.';
 type ExpenseCategoryProps = {
   cat: CategoryEntity;
   categoryGroup?: CategoryGroupEntity;
+  showOnlySpent: boolean;
   editingCell: { id: string; cell: string } | null;
   dragState: DragState<CategoryEntity> | DragState<CategoryGroupEntity> | null;
   onEditName?: ComponentProps<typeof SidebarCategory>['onEditName'];
@@ -41,6 +45,7 @@ type ExpenseCategoryProps = {
 export function ExpenseCategory({
   cat,
   categoryGroup,
+  showOnlySpent,
   editingCell,
   dragState,
   onEditName,
@@ -52,6 +57,15 @@ export function ExpenseCategory({
   onDragChange,
   onReorder,
 }: ExpenseCategoryProps) {
+  const { type } = useContext(MonthsContext);
+  const spent = useSheetValue<
+    'envelope-budget' | 'tracking-budget',
+    'sum-amount'
+  >(
+    type === 'tracking'
+      ? trackingBudget.catSumAmount(cat.id)
+      : envelopeBudget.catSumAmount(cat.id),
+  );
   let dragging = dragState && dragState.item === cat;
 
   if (dragState && dragState.item.id === cat.group) {
@@ -73,6 +87,10 @@ export function ExpenseCategory({
   });
 
   const { ExpenseCategoryComponent: MonthComponent } = useBudgetComponents();
+
+  if (showOnlySpent && !spent) {
+    return null;
+  }
 
   return (
     <Row

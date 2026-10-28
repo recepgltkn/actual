@@ -171,25 +171,16 @@ export const GroupMonth = memo(function GroupMonth({
           cursor: onShowGroupActivity ? 'pointer' : undefined,
           ...styles.tnum,
         }}
-        unexposedContent={({ value, formatter }) => (
-          <Button
-            variant="bare"
-            aria-label={group.name}
-            onPress={() => onShowGroupActivity?.(id)}
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              padding: '0 5px',
-              backgroundColor: 'transparent',
-              borderRadius: 'unset',
-              color: 'inherit',
-              fontWeight: 600,
-              ...styles.tnum,
-            }}
-          >
-            {formatter(value)}
-          </Button>
-        )}
+        role={onShowGroupActivity ? 'button' : undefined}
+        tabIndex={onShowGroupActivity ? 0 : undefined}
+        aria-label={onShowGroupActivity ? group.name : undefined}
+        onClick={() => onShowGroupActivity?.(id)}
+        onKeyDown={event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onShowGroupActivity?.(id);
+          }
+        }}
         valueProps={{
           binding: trackingBudget.groupSumAmount(id),
           type: 'financial',

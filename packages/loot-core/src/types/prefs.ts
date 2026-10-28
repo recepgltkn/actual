@@ -98,6 +98,7 @@ export type LocalPrefs = Partial<{
   'budget.collapsed': string[];
   'budget.summaryCollapsed': boolean;
   'budget.showHiddenCategories': boolean;
+  'budget.showOnlySpent': boolean;
   'budget.startMonth': string;
   'flags.updateNotificationShownForVersion': string;
   'tour.introSeen': boolean;

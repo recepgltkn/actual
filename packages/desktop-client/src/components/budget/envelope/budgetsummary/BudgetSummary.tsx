@@ -1,6 +1,7 @@
 import React, { memo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
+import { Block } from '@actual-app/components/block';
 import { Button } from '@actual-app/components/button';
 import { SvgDotsHorizontalTriple } from '@actual-app/components/icons/v1';
 import {
@@ -15,18 +16,56 @@ import * as monthUtils from '@actual-app/core/shared/months';
 import { css } from '@emotion/css';
 
 import { useEnvelopeBudget } from '#components/budget/envelope/EnvelopeBudgetContext';
+import { useEnvelopeSheetValue } from '#components/budget/envelope/EnvelopeBudgetComponents';
+import { FinancialText } from '#components/FinancialText';
 import { NotesButton } from '#components/NotesButton';
+import { PrivacyFilter } from '#components/PrivacyFilter';
+import { useFormat } from '#hooks/useFormat';
 import { useLocale } from '#hooks/useLocale';
 import { SheetNameProvider } from '#hooks/useSheetName';
 import { useUndo } from '#hooks/useUndo';
+import { envelopeBudget } from '#spreadsheet/bindings';
 
 import { BudgetMonthMenu } from './BudgetMonthMenu';
-import { ToBudget } from './ToBudget';
 import { TotalsList } from './TotalsList';
 
 type BudgetSummaryProps = {
   month: string;
 };
+
+function MonthlySavings() {
+  const totalIncome =
+    useEnvelopeSheetValue({ name: envelopeBudget.totalIncome, value: 0 }) || 0;
+  const totalSpent =
+    useEnvelopeSheetValue({ name: envelopeBudget.totalSpent, value: 0 }) || 0;
+  const format = useFormat();
+  const saved = totalIncome + totalSpent;
+
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Block>
+        <Trans>Saved this month:</Trans>
+      </Block>
+      <PrivacyFilter>
+        <Block
+          className={css([
+            styles.veryLargeText,
+            {
+              fontWeight: 400,
+              color:
+                saved < 0
+                  ? theme.budgetNumberNegative
+                  : theme.templateNumberFunded,
+            },
+          ])}
+        >
+          <FinancialText>{format(saved, 'financial')}</FinancialText>
+        </Block>
+      </PrivacyFilter>
+    </View>
+  );
+}
+
 export const BudgetSummary = memo(({ month }: BudgetSummaryProps) => {
   const locale = useLocale();
   const {
@@ -258,12 +297,7 @@ export const BudgetSummary = memo(({ month }: BudgetSummaryProps) => {
               borderTop: '1px solid ' + theme.tableBorder,
             }}
           >
-            <ToBudget
-              prevMonthName={prevMonthName}
-              month={month}
-              onBudgetAction={onBudgetAction}
-              isCollapsed
-            />
+            <MonthlySavings />
           </View>
         ) : (
           <>
@@ -279,11 +313,7 @@ export const BudgetSummary = memo(({ month }: BudgetSummaryProps) => {
               }}
             />
             <View style={{ margin: '23px 0' }}>
-              <ToBudget
-                prevMonthName={prevMonthName}
-                month={month}
-                onBudgetAction={onBudgetAction}
-              />
+              <MonthlySavings />
             </View>
           </>
         )}

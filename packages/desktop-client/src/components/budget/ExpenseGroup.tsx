@@ -1,5 +1,5 @@
 // @ts-strict-ignore
-import React from 'react';
+import React, { useContext } from 'react';
 import type { ComponentProps } from 'react';
 
 import { theme } from '@actual-app/components/theme';
@@ -17,7 +17,10 @@ import type {
 } from '#components/sort';
 import { Row, ROW_HEIGHT } from '#components/table';
 import { useDragRef } from '#hooks/useDragRef';
+import { useSheetValue } from '#hooks/useSheetValue';
+import { envelopeBudget, trackingBudget } from '#spreadsheet/bindings';
 
+import { MonthsContext } from './MonthsContext';
 import { RenderMonths } from './RenderMonths';
 import { SidebarGroup } from './SidebarGroup';
 
@@ -25,6 +28,7 @@ import { useBudgetComponents } from '.';
 
 type ExpenseGroupProps = {
   group: ComponentProps<typeof SidebarGroup>['group'];
+  showOnlySpent: boolean;
   collapsed: boolean;
   editingCell: { id: string; cell: string } | null;
   dragState: DragState<CategoryEntity> | DragState<CategoryGroupEntity> | null;
@@ -49,6 +53,7 @@ type ExpenseGroupProps = {
 
 export function ExpenseGroup({
   group,
+  showOnlySpent,
   collapsed,
   editingCell,
   dragState,
@@ -64,6 +69,15 @@ export function ExpenseGroup({
   onShowGroupActivity,
   onShowNewCategory,
 }: ExpenseGroupProps) {
+  const { type } = useContext(MonthsContext);
+  const spent = useSheetValue<
+    'envelope-budget' | 'tracking-budget',
+    'group-sum-amount'
+  >(
+    type === 'tracking'
+      ? trackingBudget.groupSumAmount(group.id)
+      : envelopeBudget.groupSumAmount(group.id),
+  );
   const dragging = dragState && dragState.item === group;
 
   const { dragRef } = useDraggable({
@@ -90,6 +104,10 @@ export function ExpenseGroup({
       }
     },
   });
+
+  if (showOnlySpent && !spent) {
+    return null;
+  }
 
   const { ExpenseGroupComponent: MonthComponent } = useBudgetComponents();
 

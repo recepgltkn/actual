@@ -82,6 +82,7 @@ export const BudgetCategories = memo<BudgetCategoriesProps>(
     const [collapsedGroupIds = [], setCollapsedGroupIdsPref] =
       useLocalPref('budget.collapsed');
     const [showHiddenCategories] = useLocalPref('budget.showHiddenCategories');
+    const [showOnlySpent] = useLocalPref('budget.showOnlySpent');
     function onCollapse(value: Array<CategoryGroupEntity['id']>) {
       setCollapsedGroupIdsPref(value);
     }
@@ -159,6 +160,12 @@ export const BudgetCategories = memo<BudgetCategoriesProps>(
         items = items.concat(incomeCategoryItems);
       }
 
+      if (showOnlySpent) {
+        items = items.filter(item =>
+          ['expense-group', 'expense-category'].includes(item.type),
+        );
+      }
+
       return items;
     }, [
       categoryGroups,
@@ -166,6 +173,7 @@ export const BudgetCategories = memo<BudgetCategoriesProps>(
       newCategoryForGroup,
       isAddingGroup,
       showHiddenCategories,
+      showOnlySpent,
     ]);
 
     const [dragState, setDragState] = useState<LocalDragState>(null);
@@ -296,6 +304,7 @@ export const BudgetCategories = memo<BudgetCategoriesProps>(
               content = (
                 <ExpenseGroup
                   group={item.value}
+                  showOnlySpent={Boolean(showOnlySpent)}
                   editingCell={editingCell}
                   collapsed={collapsedGroupIds.includes(item.value.id)}
                   dragState={dragState}
@@ -317,6 +326,7 @@ export const BudgetCategories = memo<BudgetCategoriesProps>(
               content = (
                 <ExpenseCategory
                   cat={item.value}
+                  showOnlySpent={Boolean(showOnlySpent)}
                   categoryGroup={item.group}
                   editingCell={editingCell}
                   dragState={dragState}

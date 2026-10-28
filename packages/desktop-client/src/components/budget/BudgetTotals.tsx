@@ -15,6 +15,7 @@ import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 
 import { useGlobalPref } from '#hooks/useGlobalPref';
+import { useLocalPref } from '#hooks/useLocalPref';
 
 import { RenderMonths } from './RenderMonths';
 import { getScrollbarWidth } from './util';
@@ -35,6 +36,9 @@ export const BudgetTotals = memo(function BudgetTotals({
   const { t } = useTranslation();
   const [categoryExpandedStatePref, setCategoryExpandedStatePref] =
     useGlobalPref('categoryExpandedState');
+  const [showOnlySpent, setShowOnlySpent] = useLocalPref(
+    'budget.showOnlySpent',
+  );
   const categoryExpandedState = categoryExpandedStatePref ?? 0;
   const [menuOpen, setMenuOpen] = useState(false);
   const triggerRef = useRef(null);
@@ -155,6 +159,8 @@ export const BudgetTotals = memo(function BudgetTotals({
             onMenuSelect={type => {
               if (type === 'toggle-visibility') {
                 toggleHiddenCategories();
+              } else if (type === 'toggle-spent-only') {
+                setShowOnlySpent(!showOnlySpent);
               } else if (type === 'expandAllCategories') {
                 expandAllCategories();
               } else if (type === 'collapseAllCategories') {
@@ -166,6 +172,14 @@ export const BudgetTotals = memo(function BudgetTotals({
               {
                 name: 'toggle-visibility',
                 text: t('Toggle hidden categories'),
+              },
+              {
+                name: 'toggle-spent-only',
+                text: t(
+                  showOnlySpent
+                    ? 'Show all categories'
+                    : 'Only categories with spending',
+                ),
               },
               {
                 name: 'expandAllCategories',
