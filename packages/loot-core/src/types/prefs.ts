@@ -95,6 +95,7 @@ export type LocalPrefs = Partial<{
   'ui.showClosedAccounts': boolean;
   'sidebar.accountsOpenState': Record<string, boolean>;
   'expand-splits': boolean;
+  'account-chart-type': 'balance' | 'categories';
   'budget.collapsed': string[];
   'budget.summaryCollapsed': boolean;
   'budget.showHiddenCategories': boolean;

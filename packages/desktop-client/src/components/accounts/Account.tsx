@@ -94,6 +94,7 @@ import type { AppDispatch } from '#redux/store';
 import { updateNewTransactions } from '#transactions/transactionsSlice';
 
 import { AccountEmptyMessage } from './AccountEmptyMessage';
+import type { CategoryTotal } from './CategoryDistributionGraph';
 import { AccountHeader } from './Header';
 
 type ConditionEntity = Partial<RuleConditionEntity> | TransactionFilterEntity;
@@ -290,6 +291,7 @@ type AccountInternalState = {
     prevAscDesc?: 'asc' | 'desc' | undefined;
   } | null;
   filteredAmount: null | number;
+  categoryTotals: CategoryTotal[];
 };
 
 export type TableRef = RefObject<{
@@ -334,6 +336,7 @@ class AccountInternal extends PureComponent<
       isAdding: false,
       sort: null,
       filteredAmount: null,
+      categoryTotals: [],
     };
   }
 
@@ -551,7 +554,10 @@ class AccountInternal extends PureComponent<
         const balances = this.state.showBalances
           ? await this.calculateBalances()
           : null;
-        const filteredAmount = await this.getFilteredAmount();
+        const [filteredAmount, categoryTotals] = await Promise.all([
+          this.getFilteredAmount(),
+          this.getFilteredCategoryTotals(),
+        ]);
         this.setState(
           {
             transactions: data,
@@ -560,6 +566,7 @@ class AccountInternal extends PureComponent<
             workingHard: false,
             balances,
             filteredAmount,
+            categoryTotals,
           },
           () => {
             if (firstLoad) {
@@ -1078,6 +1085,26 @@ class AccountInternal extends PureComponent<
       this.paged.query.calculate({ $sum: '$amount' }),
     );
     return amount;
+  };
+
+  getFilteredCategoryTotals = async (): Promise<CategoryTotal[]> => {
+    if (!this.paged) {
+      return [];
+    }
+
+    const { data } = await aqlQuery(
+      this.paged.query
+        .groupBy([{ $id: '$category' }])
+        .select([
+          { category: { $id: '$category' } },
+          { amount: { $sum: '$amount' } },
+        ]),
+    );
+
+    return data.map(row => ({
+      categoryId: row.category ?? null,
+      amount: row.amount,
+    }));
   };
 
   isNew = (id: TransactionEntity['id']) => {
@@ -1818,6 +1845,7 @@ class AccountInternal extends PureComponent<
       showCleared,
       showReconciled,
       filteredAmount,
+      categoryTotals,
     } = this.state;
 
     const account = accounts.find(account => account.id === accountId);
@@ -1894,6 +1922,7 @@ class AccountInternal extends PureComponent<
                 showEmptyMessage={showEmptyMessage ?? false}
                 balanceQuery={balanceQuery}
                 filteredAmount={filteredAmount}
+                categoryTotals={categoryTotals}
                 isFiltered={transactionsFiltered ?? false}
                 isSorted={this.state.sort !== null}
                 reconcileAmount={reconcileAmount}

@@ -54,6 +54,8 @@ import { useSyncServerStatus } from '#hooks/useSyncServerStatus';
 import type { TableRef } from './Account';
 import { Balances } from './Balance';
 import { BalanceHistoryGraph } from './BalanceHistoryGraph';
+import { CategoryDistributionGraph } from './CategoryDistributionGraph';
+import type { CategoryTotal } from './CategoryDistributionGraph';
 import { ReconcileMenu, ReconcilingMessage } from './Reconcile';
 
 type AccountHeaderProps = {
@@ -75,6 +77,7 @@ type AccountHeaderProps = {
   reconcileAmount?: number | null;
   isFiltered: boolean;
   filteredAmount?: number | null;
+  categoryTotals: CategoryTotal[];
   isSorted: boolean;
   search: string;
   filterConditions: RuleConditionEntity[];
@@ -95,7 +98,7 @@ type AccountHeaderProps = {
   saveNameError: AccountNameFieldProps['saveNameError'];
   onSync: () => void;
   onImport: () => void;
-  onMenuSelect: AccountMenuProps['onMenuSelect'];
+  onMenuSelect: (item: AccountHeaderMenuAction) => void;
   onReconcile: ComponentProps<typeof ReconcileMenu>['onReconcile'];
   onBatchEdit: ComponentProps<typeof SelectedTransactionsButton>['onEdit'];
   onRunRules: ComponentProps<typeof SelectedTransactionsButton>['onRunRules'];
@@ -128,6 +131,25 @@ type AccountHeaderProps = {
     | 'onReloadSavedFilter'
   >;
 
+type AccountChartType = 'balance' | 'categories';
+type AccountMenuAction =
+  | 'link'
+  | 'unlink'
+  | 'close'
+  | 'reopen'
+  | 'export'
+  | 'remove-sorting'
+  | 'toggle-reconciled'
+  | 'toggle-net-worth-chart'
+  | 'manage-columns'
+  | 'account-group'
+  | 'show-balance-chart'
+  | 'show-category-chart';
+type AccountHeaderMenuAction = Exclude<
+  AccountMenuAction,
+  'show-balance-chart' | 'show-category-chart'
+>;
+
 export function AccountHeader({
   tableRef,
   isNameEditable,
@@ -147,6 +169,7 @@ export function AccountHeader({
   reconcileAmount,
   isFiltered,
   filteredAmount,
+  categoryTotals,
   isSorted,
   search,
   filterConditions,
@@ -196,6 +219,20 @@ export function AccountHeader({
     `show-account-${accountId}-net-worth-chart`,
   );
   const showNetWorthChart = showNetWorthChartPref === 'true';
+  const [chartTypePref, setChartTypePref] = useLocalPref('account-chart-type');
+  const chartType: AccountChartType =
+    chartTypePref === 'categories' ? 'categories' : 'balance';
+
+  const onHeaderMenuSelect = (item: AccountMenuAction) => {
+    if (item === 'show-balance-chart' || item === 'show-category-chart') {
+      setChartTypePref(
+        item === 'show-category-chart' ? 'categories' : 'balance',
+      );
+      _setShowNetWorthChartPref('true');
+      return;
+    }
+    onMenuSelect(item);
+  };
 
   const dateFormat = useDateFormat() || 'MM/dd/yyyy';
   const locale = useLocale();
@@ -320,15 +357,16 @@ export function AccountHeader({
             />
           </View>
 
-          <BalanceHistoryGraph
-            ref={graphRef}
-            accountId={accountId}
-            style={{
-              height: 'calc(5vh + 5vw)',
-              margin: 0,
-              display: showNetWorthChart ? 'flex' : 'none',
-            }}
-          />
+          {showNetWorthChart &&
+            (chartType === 'categories' ? (
+              <CategoryDistributionGraph categoryTotals={categoryTotals} />
+            ) : (
+              <BalanceHistoryGraph
+                ref={graphRef}
+                accountId={accountId}
+                style={{ height: 'calc(5vh + 5vw)', margin: 0 }}
+              />
+            ))}
         </View>
         <SpaceBetween gap={10} style={{ marginTop: 12 }}>
           {canSync && (
@@ -504,9 +542,10 @@ export function AccountHeader({
                       account={account}
                       canSync={canSync}
                       showNetWorthChart={showNetWorthChart}
+                      chartType={chartType}
                       isSorted={isSorted}
                       showReconciled={showReconciled}
-                      onMenuSelect={onMenuSelect}
+                      onMenuSelect={onHeaderMenuSelect}
                     />
                   </Dialog>
                 </Popover>
@@ -527,8 +566,25 @@ export function AccountHeader({
                   <Dialog>
                     <Menu
                       slot="close"
-                      onMenuSelect={onMenuSelect}
+                      onMenuSelect={onHeaderMenuSelect}
                       items={[
+                        {
+                          type: Menu.label,
+                          name: 'chart-type',
+                          text: t(
+                            chartType === 'categories'
+                              ? 'Chart: Category distribution'
+                              : 'Chart: Balance history',
+                          ),
+                        },
+                        {
+                          name: 'show-balance-chart',
+                          text: t('Balance history'),
+                        },
+                        {
+                          name: 'show-category-chart',
+                          text: t('Category distribution'),
+                        },
                         ...(isSorted
                           ? [
                               {
@@ -541,8 +597,8 @@ export function AccountHeader({
                         {
                           name: 'toggle-net-worth-chart',
                           text: showNetWorthChart
-                            ? t('Hide balance chart')
-                            : t('Show balance chart'),
+                            ? t('Hide chart')
+                            : t('Show chart'),
                         },
                         {
                           name: 'manage-columns',
@@ -721,27 +777,17 @@ type AccountMenuProps = {
   account: AccountEntity;
   canSync: boolean;
   showNetWorthChart: boolean;
+  chartType: AccountChartType;
   showReconciled: boolean;
   isSorted: boolean;
-  onMenuSelect: (
-    item:
-      | 'link'
-      | 'unlink'
-      | 'close'
-      | 'reopen'
-      | 'export'
-      | 'remove-sorting'
-      | 'toggle-reconciled'
-      | 'toggle-net-worth-chart'
-      | 'manage-columns'
-      | 'account-group',
-  ) => void;
+  onMenuSelect: (item: AccountMenuAction) => void;
 };
 
 function AccountMenu({
   account,
   canSync,
   showNetWorthChart,
+  chartType,
   showReconciled,
   isSorted,
   onMenuSelect,
@@ -753,9 +799,7 @@ function AccountMenu({
   return (
     <Menu
       slot="close"
-      onMenuSelect={item => {
-        onMenuSelect(item);
-      }}
+      onMenuSelect={onMenuSelect}
       items={[
         ...(isSorted
           ? [
@@ -766,10 +810,24 @@ function AccountMenu({
             ]
           : []),
         {
+          type: Menu.label,
+          name: 'chart-type',
+          text: t('Chart: {{chart}}', {
+            chart: t(
+              chartType === 'categories'
+                ? 'Category distribution'
+                : 'Balance history',
+            ),
+          }),
+        },
+        { name: 'show-balance-chart', text: t('Balance history') },
+        {
+          name: 'show-category-chart',
+          text: t('Category distribution'),
+        },
+        {
           name: 'toggle-net-worth-chart',
-          text: showNetWorthChart
-            ? t('Hide balance chart')
-            : t('Show balance chart'),
+          text: showNetWorthChart ? t('Hide chart') : t('Show chart'),
         },
         {
           name: 'manage-columns',
