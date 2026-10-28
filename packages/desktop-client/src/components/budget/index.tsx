@@ -150,12 +150,19 @@ export function Budget() {
     });
   };
 
-  const onShowGroupActivity = groupId => {
+  const onShowGroupActivity = (groupId, month) => {
     void navigate('/accounts', {
       state: {
         goBack: true,
         filterConditions: [
           { field: 'category_group', op: 'is', value: groupId, type: 'id' },
+          {
+            field: 'date',
+            op: 'is',
+            value: month,
+            options: { month: true },
+            type: 'date',
+          },
         ],
       },
     });
@@ -292,7 +299,7 @@ export type CategoryMonthProps = {
 export type CategoryGroupMonthProps = {
   month: string;
   group: CategoryGroupEntity;
-  onShowGroupActivity?: (id: CategoryGroupEntity['id']) => void;
+  onShowGroupActivity?: (id: CategoryGroupEntity['id'], month: string) => void;
 };
 
 export type BudgetComponents = {

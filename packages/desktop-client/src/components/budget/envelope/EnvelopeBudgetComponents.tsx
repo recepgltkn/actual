@@ -190,11 +190,11 @@ export const ExpenseGroupMonth = memo(function ExpenseGroupMonth({
         role={onShowGroupActivity ? 'button' : undefined}
         tabIndex={onShowGroupActivity ? 0 : undefined}
         aria-label={onShowGroupActivity ? group.name : undefined}
-        onClick={() => onShowGroupActivity?.(id)}
+        onClick={() => onShowGroupActivity?.(id, month)}
         onKeyDown={event => {
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
-            onShowGroupActivity?.(id);
+            onShowGroupActivity?.(id, month);
           }
         }}
         valueProps={{

@@ -55,7 +55,7 @@ type BudgetTableProps = {
     targetId: CategoryEntity['id'] | null;
   }) => void;
   onShowActivity: (id: CategoryEntity['id'], month?: string) => void;
-  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
+  onShowGroupActivity: (id: CategoryGroupEntity['id'], month: string) => void;
   onBudgetAction: (month: string, type: string, args: unknown) => void;
 };
 

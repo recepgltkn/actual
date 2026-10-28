@@ -45,7 +45,7 @@ type BudgetCategoriesProps = {
   editingCell: { id: string; cell: string } | null;
   onBudgetAction: (month: string, action: string, arg: unknown) => void;
   onShowActivity: (id: CategoryEntity['id'], month?: string) => void;
-  onShowGroupActivity: (id: CategoryGroupEntity['id']) => void;
+  onShowGroupActivity: (id: CategoryGroupEntity['id'], month: string) => void;
   onEditName: (id: CategoryEntity['id']) => void;
   onEditMonth: (id: CategoryEntity['id'], month: string) => void;
   onSaveCategory: (category: CategoryEntity) => void;

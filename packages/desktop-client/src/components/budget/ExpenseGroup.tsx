@@ -45,7 +45,7 @@ type ExpenseGroupProps = {
   onReorderGroup: OnDropCallback;
   onReorderCategory: OnDropCallback;
   onToggleCollapse?: ComponentProps<typeof SidebarGroup>['onToggleCollapse'];
-  onShowGroupActivity?: (id: CategoryGroupEntity['id']) => void;
+  onShowGroupActivity?: (id: CategoryGroupEntity['id'], month: string) => void;
   onShowNewCategory?: ComponentProps<typeof SidebarGroup>['onShowNewCategory'];
 };
 
