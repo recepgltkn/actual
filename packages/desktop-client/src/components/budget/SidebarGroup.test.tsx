@@ -125,7 +125,7 @@ describe('SidebarGroup context menu', () => {
     ]);
   });
 
-  it('opens group activity when the group name is clicked', async () => {
+  it('does not open group activity when the group name is clicked', async () => {
     const onShowGroupActivity = vi.fn();
     const onToggleCollapse = vi.fn();
 
@@ -138,13 +138,12 @@ describe('SidebarGroup context menu', () => {
         onSave={vi.fn()}
         onDelete={vi.fn()}
         onToggleCollapse={onToggleCollapse}
-        onShowGroupActivity={onShowGroupActivity}
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Usual Expenses' }));
+    fireEvent.click(screen.getByText('Usual Expenses'));
 
-    expect(onShowGroupActivity).toHaveBeenCalledWith(group.id);
+    expect(onShowGroupActivity).not.toHaveBeenCalled();
     expect(onToggleCollapse).not.toHaveBeenCalled();
   });
 });

@@ -363,7 +363,6 @@ export const BudgetCategories = memo<BudgetCategoriesProps>(
                   onSave={_onSaveGroup}
                   onSortCategories={onSortCategories}
                   onToggleCollapse={onToggleCollapse}
-                  onShowGroupActivity={onShowGroupActivity}
                   onShowNewCategory={onShowNewCategory!}
                 />
               );
