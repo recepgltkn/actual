@@ -828,7 +828,7 @@ function AccountMenu({
         {
           name: 'toggle-net-worth-chart',
           text: showNetWorthChart ? t('Hide chart') : t('Show chart'),
-        },
+          },
         {
           name: 'manage-columns',
           text: t('Manage table columns'),
