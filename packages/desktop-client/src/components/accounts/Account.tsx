@@ -426,6 +426,20 @@ class AccountInternal extends PureComponent<
     if (this.props.accountId !== prevProps.accountId) {
       this.setState({ sort: null, search: '', filterConditions: [] });
     }
+
+    const filterConditions = this.props.filterConditions || [];
+    if (!isEqual(filterConditions, prevProps.filterConditions || [])) {
+      this.setState(
+        {
+          filterConditions,
+          filterConditionsOp: 'and',
+          filterId: undefined,
+          search: '',
+          sort: null,
+        },
+        () => this.fetchTransactions(filterConditions),
+      );
+    }
   }
 
   componentWillUnmount() {
