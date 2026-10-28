@@ -19,6 +19,7 @@ import { css } from '@emotion/css';
 import { t } from 'i18next';
 
 import { BalanceWithCarryover } from '#components/budget/BalanceWithCarryover';
+import { useBudgetColumnVisibility } from '#components/budget/useBudgetColumnVisibility';
 import { makeAmountGrey } from '#components/budget/util';
 import { NotesButton } from '#components/NotesButton';
 import { CellValue, CellValueText } from '#components/spreadsheet/CellValue';
@@ -68,6 +69,7 @@ const cellStyle: CSSProperties = {
 };
 
 export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
+  const { showBudgeted, showBalance } = useBudgetColumnVisibility();
   return (
     <View
       style={{
@@ -78,17 +80,19 @@ export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
         paddingBottom: 10,
       }}
     >
-      <View style={headerLabelStyle}>
-        <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Budgeted</Trans>
-        </Text>
-        <TrackingCellValue
-          binding={trackingBudget.totalBudgetedExpense}
-          type="financial"
-        >
-          {props => <CellValueText {...props} style={cellStyle} />}
-        </TrackingCellValue>
-      </View>
+      {showBudgeted && (
+        <View style={headerLabelStyle}>
+          <Text style={{ color: theme.tableHeaderText }}>
+            <Trans>Budgeted</Trans>
+          </Text>
+          <TrackingCellValue
+            binding={trackingBudget.totalBudgetedExpense}
+            type="financial"
+          >
+            {props => <CellValueText {...props} style={cellStyle} />}
+          </TrackingCellValue>
+        </View>
+      )}
       <View style={headerLabelStyle}>
         <Text style={{ color: theme.tableHeaderText }}>
           <Trans>Spent</Trans>
@@ -97,22 +101,25 @@ export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
           {props => <CellValueText {...props} style={cellStyle} />}
         </TrackingCellValue>
       </View>
-      <View style={headerLabelStyle}>
-        <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Balance</Trans>
-        </Text>
-        <TrackingCellValue
-          binding={trackingBudget.totalLeftover}
-          type="financial"
-        >
-          {props => <CellValueText {...props} style={cellStyle} />}
-        </TrackingCellValue>
-      </View>
+      {showBalance && (
+        <View style={headerLabelStyle}>
+          <Text style={{ color: theme.tableHeaderText }}>
+            <Trans>Balance</Trans>
+          </Text>
+          <TrackingCellValue
+            binding={trackingBudget.totalLeftover}
+            type="financial"
+          >
+            {props => <CellValueText {...props} style={cellStyle} />}
+          </TrackingCellValue>
+        </View>
+      )}
     </View>
   );
 });
 
 export function IncomeHeaderMonth() {
+  const { showBudgeted } = useBudgetColumnVisibility();
   return (
     <View
       style={{
@@ -121,11 +128,13 @@ export function IncomeHeaderMonth() {
         paddingBottom: 5,
       }}
     >
-      <View style={headerLabelStyle}>
-        <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Budgeted</Trans>
-        </Text>
-      </View>
+      {showBudgeted && (
+        <View style={headerLabelStyle}>
+          <Text style={{ color: theme.tableHeaderText }}>
+            <Trans>Budgeted</Trans>
+          </Text>
+        </View>
+      )}
       <View style={headerLabelStyle}>
         <Text style={{ color: theme.tableHeaderText }}>
           <Trans>Received</Trans>
@@ -141,6 +150,7 @@ export const GroupMonth = memo(function GroupMonth({
   onShowGroupActivity,
 }: CategoryGroupMonthProps) {
   const { id } = group;
+  const { showBudgeted, showBalance } = useBudgetColumnVisibility();
 
   return (
     <View
@@ -152,16 +162,18 @@ export const GroupMonth = memo(function GroupMonth({
           : theme.budgetHeaderOtherMonth,
       }}
     >
-      <TrackingSheetCell
-        name="budgeted"
-        width="flex"
-        textAlign="right"
-        style={{ fontWeight: 600, ...styles.tnum }}
-        valueProps={{
-          binding: trackingBudget.groupBudgeted(id),
-          type: 'financial',
-        }}
-      />
+      {showBudgeted && (
+        <TrackingSheetCell
+          name="budgeted"
+          width="flex"
+          textAlign="right"
+          style={{ fontWeight: 600, ...styles.tnum }}
+          valueProps={{
+            binding: trackingBudget.groupBudgeted(id),
+            type: 'financial',
+          }}
+        />
+      )}
       <TrackingSheetCell
         name="spent"
         width="flex"
@@ -186,7 +198,7 @@ export const GroupMonth = memo(function GroupMonth({
           type: 'financial',
         }}
       />
-      {!group.is_income && (
+      {showBalance && !group.is_income && (
         <TrackingSheetCell
           name="balance"
           width="flex"
@@ -215,6 +227,7 @@ export const CategoryMonth = memo(function CategoryMonth({
   onShowActivity,
 }: CategoryMonthProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { showBudgeted, showBalance } = useBudgetColumnVisibility();
   const triggerRef = useRef(null);
   const format = useFormat();
 
@@ -372,46 +385,48 @@ export const CategoryMonth = memo(function CategoryMonth({
             </View>
           </>
         )}
-        <TrackingSheetCell
-          name="budget"
-          exposed={editing}
-          focused={editing}
-          width="flex"
-          onExpose={() => onEdit(category.id, month)}
-          style={{ ...(editing && { zIndex: 100 }), ...styles.tnum }}
-          textAlign="right"
-          valueStyle={{
-            cursor: 'default',
-            margin: 1,
-            padding: '0 4px',
-            borderRadius: 4,
-            ':hover': {
-              boxShadow: 'inset 0 0 0 1px ' + theme.pageTextSubdued,
-              backgroundColor: theme.budgetCurrentMonth,
-            },
-          }}
-          valueProps={{
-            binding: trackingBudget.catBudgeted(category.id),
-            type: 'financial',
-            getValueStyle: makeAmountGrey,
-            formatExpr: format.forEdit,
-            unformatExpr: format.fromEdit,
-          }}
-          inputProps={{
-            onBlur: () => {
-              onEdit(null);
-            },
-            style: {
-              backgroundColor: theme.budgetCurrentMonth,
-            },
-          }}
-          onSave={(parsedIntegerAmount: number | null) => {
-            onBudgetAction(month, 'budget-amount', {
-              category: category.id,
-              amount: parsedIntegerAmount ?? 0,
-            });
-          }}
-        />
+        {showBudgeted && (
+          <TrackingSheetCell
+            name="budget"
+            exposed={editing}
+            focused={editing}
+            width="flex"
+            onExpose={() => onEdit(category.id, month)}
+            style={{ ...(editing && { zIndex: 100 }), ...styles.tnum }}
+            textAlign="right"
+            valueStyle={{
+              cursor: 'default',
+              margin: 1,
+              padding: '0 4px',
+              borderRadius: 4,
+              ':hover': {
+                boxShadow: 'inset 0 0 0 1px ' + theme.pageTextSubdued,
+                backgroundColor: theme.budgetCurrentMonth,
+              },
+            }}
+            valueProps={{
+              binding: trackingBudget.catBudgeted(category.id),
+              type: 'financial',
+              getValueStyle: makeAmountGrey,
+              formatExpr: format.forEdit,
+              unformatExpr: format.fromEdit,
+            }}
+            inputProps={{
+              onBlur: () => {
+                onEdit(null);
+              },
+              style: {
+                backgroundColor: theme.budgetCurrentMonth,
+              },
+            }}
+            onSave={(parsedIntegerAmount: number | null) => {
+              onBudgetAction(month, 'budget-amount', {
+                category: category.id,
+                amount: parsedIntegerAmount ?? 0,
+              });
+            }}
+          />
+        )}
       </View>
       <Field name="spent" width="flex" style={{ textAlign: 'right' }}>
         <View
@@ -472,7 +487,7 @@ export const CategoryMonth = memo(function CategoryMonth({
         </View>
       </Field>
 
-      {!category.is_income && (
+      {showBalance && !category.is_income && (
         <Field
           name="balance"
           width="flex"

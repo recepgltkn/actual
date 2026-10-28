@@ -18,6 +18,7 @@ import { useGlobalPref } from '#hooks/useGlobalPref';
 import { useLocalPref } from '#hooks/useLocalPref';
 
 import { RenderMonths } from './RenderMonths';
+import { useBudgetColumnVisibility } from './useBudgetColumnVisibility';
 import { getScrollbarWidth } from './util';
 
 import { useBudgetComponents } from '.';
@@ -39,6 +40,8 @@ export const BudgetTotals = memo(function BudgetTotals({
   const [showOnlySpent, setShowOnlySpent] = useLocalPref(
     'budget.showOnlySpent',
   );
+  const { showBudgeted, setShowBudgeted, showBalance, setShowBalance } =
+    useBudgetColumnVisibility();
   const categoryExpandedState = categoryExpandedStatePref ?? 0;
   const [menuOpen, setMenuOpen] = useState(false);
   const triggerRef = useRef(null);
@@ -161,6 +164,10 @@ export const BudgetTotals = memo(function BudgetTotals({
                 toggleHiddenCategories();
               } else if (type === 'toggle-spent-only') {
                 setShowOnlySpent(!showOnlySpent);
+              } else if (type === 'toggle-budgeted') {
+                setShowBudgeted(!showBudgeted);
+              } else if (type === 'toggle-balance') {
+                setShowBalance(!showBalance);
               } else if (type === 'expandAllCategories') {
                 expandAllCategories();
               } else if (type === 'collapseAllCategories') {
@@ -180,6 +187,14 @@ export const BudgetTotals = memo(function BudgetTotals({
                     ? 'Show all categories'
                     : 'Only categories with spending',
                 ),
+              },
+              {
+                name: 'toggle-budgeted',
+                text: t(showBudgeted ? 'Hide budgeted' : 'Show budgeted'),
+              },
+              {
+                name: 'toggle-balance',
+                text: t(showBalance ? 'Hide balance' : 'Show balance'),
               },
               {
                 name: 'expandAllCategories',

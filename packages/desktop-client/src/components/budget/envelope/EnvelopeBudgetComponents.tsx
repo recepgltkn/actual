@@ -17,6 +17,7 @@ import * as monthUtils from '@actual-app/core/shared/months';
 import { css } from '@emotion/css';
 
 import { BalanceWithCarryover } from '#components/budget/BalanceWithCarryover';
+import { useBudgetColumnVisibility } from '#components/budget/useBudgetColumnVisibility';
 import { makeAmountGrey } from '#components/budget/util';
 import { NotesButton } from '#components/NotesButton';
 import { CellValue, CellValueText } from '#components/spreadsheet/CellValue';
@@ -74,6 +75,7 @@ const cellStyle: CSSProperties = {
 };
 
 export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
+  const { showBudgeted, showBalance } = useBudgetColumnVisibility();
   return (
     <View
       style={{
@@ -85,19 +87,25 @@ export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
         backgroundColor: theme.budgetCurrentMonth,
       }}
     >
-      <View style={headerLabelStyle}>
-        <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Budgeted</Trans>
-        </Text>
-        <EnvelopeCellValue
-          binding={envelopeBudget.totalBudgeted}
-          type="financial"
-        >
-          {props => (
-            <CellValueText {...props} value={-props.value} style={cellStyle} />
-          )}
-        </EnvelopeCellValue>
-      </View>
+      {showBudgeted && (
+        <View style={headerLabelStyle}>
+          <Text style={{ color: theme.tableHeaderText }}>
+            <Trans>Budgeted</Trans>
+          </Text>
+          <EnvelopeCellValue
+            binding={envelopeBudget.totalBudgeted}
+            type="financial"
+          >
+            {props => (
+              <CellValueText
+                {...props}
+                value={-props.value}
+                style={cellStyle}
+              />
+            )}
+          </EnvelopeCellValue>
+        </View>
+      )}
       <View style={headerLabelStyle}>
         <Text style={{ color: theme.tableHeaderText }}>
           <Trans>Spent</Trans>
@@ -106,17 +114,19 @@ export const BudgetTotalsMonth = memo(function BudgetTotalsMonth() {
           {props => <CellValueText {...props} style={cellStyle} />}
         </EnvelopeCellValue>
       </View>
-      <View style={headerLabelStyle}>
-        <Text style={{ color: theme.tableHeaderText }}>
-          <Trans>Balance</Trans>
-        </Text>
-        <EnvelopeCellValue
-          binding={envelopeBudget.totalBalance}
-          type="financial"
-        >
-          {props => <CellValueText {...props} style={cellStyle} />}
-        </EnvelopeCellValue>
-      </View>
+      {showBalance && (
+        <View style={headerLabelStyle}>
+          <Text style={{ color: theme.tableHeaderText }}>
+            <Trans>Balance</Trans>
+          </Text>
+          <EnvelopeCellValue
+            binding={envelopeBudget.totalBalance}
+            type="financial"
+          >
+            {props => <CellValueText {...props} style={cellStyle} />}
+          </EnvelopeCellValue>
+        </View>
+      )}
     </View>
   );
 });
@@ -144,6 +154,7 @@ export const ExpenseGroupMonth = memo(function ExpenseGroupMonth({
   onShowGroupActivity,
 }: CategoryGroupMonthProps) {
   const { id } = group;
+  const { showBudgeted, showBalance } = useBudgetColumnVisibility();
 
   return (
     <View
@@ -155,16 +166,18 @@ export const ExpenseGroupMonth = memo(function ExpenseGroupMonth({
           : theme.budgetHeaderOtherMonth,
       }}
     >
-      <EnvelopeSheetCell
-        name="budgeted"
-        width="flex"
-        textAlign="right"
-        style={{ fontWeight: 600, ...styles.tnum }}
-        valueProps={{
-          binding: envelopeBudget.groupBudgeted(id),
-          type: 'financial',
-        }}
-      />
+      {showBudgeted && (
+        <EnvelopeSheetCell
+          name="budgeted"
+          width="flex"
+          textAlign="right"
+          style={{ fontWeight: 600, ...styles.tnum }}
+          valueProps={{
+            binding: envelopeBudget.groupBudgeted(id),
+            type: 'financial',
+          }}
+        />
+      )}
       <EnvelopeSheetCell
         name="spent"
         width="flex"
@@ -189,20 +202,22 @@ export const ExpenseGroupMonth = memo(function ExpenseGroupMonth({
           type: 'financial',
         }}
       />
-      <EnvelopeSheetCell
-        name="balance"
-        width="flex"
-        textAlign="right"
-        style={{
-          fontWeight: 600,
-          paddingRight: styles.monthRightPadding,
-          ...styles.tnum,
-        }}
-        valueProps={{
-          binding: envelopeBudget.groupBalance(id),
-          type: 'financial',
-        }}
-      />
+      {showBalance && (
+        <EnvelopeSheetCell
+          name="balance"
+          width="flex"
+          textAlign="right"
+          style={{
+            fontWeight: 600,
+            paddingRight: styles.monthRightPadding,
+            ...styles.tnum,
+          }}
+          valueProps={{
+            binding: envelopeBudget.groupBalance(id),
+            type: 'financial',
+          }}
+        />
+      )}
     </View>
   );
 });
@@ -221,6 +236,7 @@ export const ExpenseCategoryMonth = memo(function ExpenseCategoryMonth({
   const budgetMenuTriggerRef = useRef(null);
   const balanceMenuTriggerRef = useRef(null);
   const [budgetMenuOpen, setBudgetMenuOpen] = useState(false);
+  const { showBudgeted, showBalance } = useBudgetColumnVisibility();
   const [budgetPosition, setBudgetPosition] = useState({
     crossOffset: 0,
     offset: 0,
@@ -407,46 +423,48 @@ export const ExpenseCategoryMonth = memo(function ExpenseCategoryMonth({
             </View>
           </>
         )}
-        <EnvelopeSheetCell
-          name="budget"
-          exposed={editing}
-          focused={editing}
-          width="flex"
-          onExpose={() => onEdit(category.id, month)}
-          style={{ ...(editing && { zIndex: 100 }), ...styles.tnum }}
-          textAlign="right"
-          valueStyle={{
-            cursor: 'default',
-            margin: 1,
-            padding: '0 4px',
-            borderRadius: 4,
-            ':hover': {
-              boxShadow: 'inset 0 0 0 1px ' + theme.pageTextSubdued, //remove mobile color variable
-              backgroundColor: theme.budgetCurrentMonth,
-            },
-          }}
-          valueProps={{
-            binding: envelopeBudget.catBudgeted(category.id),
-            type: 'financial',
-            getValueStyle: makeAmountGrey,
-            formatExpr: format.forEdit,
-            unformatExpr: format.fromEdit,
-          }}
-          inputProps={{
-            onBlur: () => {
-              onEdit(null);
-            },
-            style: {
-              backgroundColor: theme.budgetCurrentMonth,
-            },
-          }}
-          onSave={(parsedIntegerAmount: number | null) => {
-            onBudgetAction(month, 'budget-amount', {
-              category: category.id,
-              amount: parsedIntegerAmount ?? 0,
-            });
-          }}
-        />
+        {showBudgeted && (
+          <EnvelopeSheetCell
+            name="budget"
+            exposed={editing}
+            focused={editing}
+            width="flex"
+            onExpose={() => onEdit(category.id, month)}
+            style={{ ...(editing && { zIndex: 100 }), ...styles.tnum }}
+            textAlign="right"
+            valueStyle={{
+              cursor: 'default',
+              margin: 1,
+              padding: '0 4px',
+              borderRadius: 4,
+              ':hover': {
+                boxShadow: 'inset 0 0 0 1px ' + theme.pageTextSubdued, //remove mobile color variable
+                backgroundColor: theme.budgetCurrentMonth,
+              },
+            }}
+            valueProps={{
+              binding: envelopeBudget.catBudgeted(category.id),
+              type: 'financial',
+              getValueStyle: makeAmountGrey,
+              formatExpr: format.forEdit,
+              unformatExpr: format.fromEdit,
+            }}
+            inputProps={{
+              onBlur: () => {
+                onEdit(null);
+              },
+              style: {
+                backgroundColor: theme.budgetCurrentMonth,
+              },
+            }}
+            onSave={(parsedIntegerAmount: number | null) => {
+              onBudgetAction(month, 'budget-amount', {
+                category: category.id,
+                amount: parsedIntegerAmount ?? 0,
+              });
+            }}
+          />
+        )}
       </View>
       <Field name="spent" width="flex" style={{ textAlign: 'right' }}>
         <View
@@ -504,64 +522,66 @@ export const ExpenseCategoryMonth = memo(function ExpenseCategoryMonth({
           </EnvelopeCellValue>
         </View>
       </Field>
-      <Field
-        ref={balanceMenuTriggerRef}
-        name="balance"
-        width="flex"
-        style={{ paddingRight: styles.monthRightPadding, textAlign: 'right' }}
-      >
-        <Button
-          variant="bare"
-          onPress={() => {
-            resetBalancePosition(-6, -4);
-            setBalanceMenuOpen(true);
-          }}
-          onContextMenu={e => {
-            handleBalanceContextMenu(e);
-            // We need to calculate differently from the hook due to being aligned to the right
-            const rect = e.currentTarget.getBoundingClientRect();
-            resetBalancePosition(
-              e.clientX - rect.right + 200 - 8,
-              e.clientY - rect.bottom - 8,
-            );
-          }}
-          style={{
-            justifyContent: 'flex-end',
-            background: 'transparent',
-            width: '100%',
-            padding: 0,
-          }}
+      {showBalance && (
+        <Field
+          ref={balanceMenuTriggerRef}
+          name="balance"
+          width="flex"
+          style={{ paddingRight: styles.monthRightPadding, textAlign: 'right' }}
         >
-          <BalanceWithCarryover
-            carryover={envelopeBudget.catCarryover(category.id)}
-            balance={envelopeBudget.catBalance(category.id)}
-            goal={envelopeBudget.catGoal(category.id)}
-            budgeted={envelopeBudget.catBudgeted(category.id)}
-            longGoal={envelopeBudget.catLongGoal(category.id)}
-            tooltipDisabled={balanceMenuOpen}
-          />
-        </Button>
+          <Button
+            variant="bare"
+            onPress={() => {
+              resetBalancePosition(-6, -4);
+              setBalanceMenuOpen(true);
+            }}
+            onContextMenu={e => {
+              handleBalanceContextMenu(e);
+              // We need to calculate differently from the hook due to being aligned to the right
+              const rect = e.currentTarget.getBoundingClientRect();
+              resetBalancePosition(
+                e.clientX - rect.right + 200 - 8,
+                e.clientY - rect.bottom - 8,
+              );
+            }}
+            style={{
+              justifyContent: 'flex-end',
+              background: 'transparent',
+              width: '100%',
+              padding: 0,
+            }}
+          >
+            <BalanceWithCarryover
+              carryover={envelopeBudget.catCarryover(category.id)}
+              balance={envelopeBudget.catBalance(category.id)}
+              goal={envelopeBudget.catGoal(category.id)}
+              budgeted={envelopeBudget.catBudgeted(category.id)}
+              longGoal={envelopeBudget.catLongGoal(category.id)}
+              tooltipDisabled={balanceMenuOpen}
+            />
+          </Button>
 
-        <Popover
-          triggerRef={balanceMenuTriggerRef}
-          placement="bottom end"
-          isOpen={balanceMenuOpen}
-          onOpenChange={() => setBalanceMenuOpen(false)}
-          style={{
-            margin: 1,
-            minWidth: 190,
-          }}
-          isNonModal
-          {...balancePosition}
-        >
-          <BalanceMovementMenu
-            categoryId={category.id}
-            month={month}
-            onBudgetAction={onBudgetAction}
-            onClose={() => setBalanceMenuOpen(false)}
-          />
-        </Popover>
-      </Field>
+          <Popover
+            triggerRef={balanceMenuTriggerRef}
+            placement="bottom end"
+            isOpen={balanceMenuOpen}
+            onOpenChange={() => setBalanceMenuOpen(false)}
+            style={{
+              margin: 1,
+              minWidth: 190,
+            }}
+            isNonModal
+            {...balancePosition}
+          >
+            <BalanceMovementMenu
+              categoryId={category.id}
+              month={month}
+              onBudgetAction={onBudgetAction}
+              onClose={() => setBalanceMenuOpen(false)}
+            />
+          </Popover>
+        </Field>
+      )}
     </View>
   );
 });
