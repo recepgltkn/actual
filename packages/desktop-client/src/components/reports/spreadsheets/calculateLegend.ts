@@ -16,6 +16,22 @@ export function calculateLegend(
   balanceTypeOp?: balanceTypeOpType,
 ): LegendEntity[] {
   const colorScale = getColorScale('qualitative');
+
+  function getStableColor(id: string | null | undefined, index: number) {
+    if (!id) {
+      return colorScale[index % colorScale.length];
+    }
+
+    // Keep an entity's color stable when its rank changes between reports.
+    let hash = 2166136261;
+    for (let i = 0; i < id.length; i++) {
+      hash ^= id.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+
+    return colorScale[(hash >>> 0) % colorScale.length];
+  }
+
   const chooseData =
     groupBy === 'Interval'
       ? intervalData.map(c => {
@@ -25,9 +41,13 @@ export function calculateLegend(
           return { name: c.name, id: c.id, data: c };
         });
 
-  function getColor(data: IntervalEntity | GroupedEntity, index: number) {
+  function getColor(
+    data: IntervalEntity | GroupedEntity,
+    index: number,
+    id: string | null | undefined,
+  ) {
     if (graphType === 'DonutGraph') {
-      return colorScale[index % colorScale.length];
+      return getStableColor(id, index);
     }
 
     if (groupBy === 'Interval') {
@@ -62,14 +82,14 @@ export function calculateLegend(
       return theme.reportsChartFill;
     }
 
-    return colorScale[index % colorScale.length];
+    return getStableColor(id, index);
   }
 
   const legend: LegendEntity[] = chooseData.map((item, index) => {
     return {
       id: item.id || '',
       name: item.name || '',
-      color: getColor(item.data, index),
+      color: getColor(item.data, index, item.id || item.name),
       dataKey: item.id || item.name || '', // Use id for unique data lookup
       uncategorizedId:
         'uncategorizedId' in item.data ? item.data.uncategorizedId : undefined,
